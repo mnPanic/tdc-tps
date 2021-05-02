@@ -16,15 +16,19 @@ Se ejecutó el programa en tres redes distintas el 1/05/2021 aproximadamente a l
 - red 2
 - red 2
 
-{justificar eleccion de s2 cuando lo hagamos}
+
+### Fuente de memoria nula para distinguir hosts de la red
+Para hallar los hosts conectados a una red determinada, bastará con hallar todas las IPs que participan de la comunicación en el medio compartido. Esto es: todas las que envían o reciben paquetes ARP. 
+
+Para esto, se eligió modelar una fuente de memoria nula S2, en la que tratamos como símbolo distinguido a cada IP de fuente en un paquete ARP. También se eligió modelar otra fuente, en la que los símbolos son las IP de destino, y se observó las distribuciones de ambas, y cuántos nodos aparecían.
 
 ## Resultados de los experimentos
 
 <!-- 600 -->
 
-Resultado para cada red
+Resultado de análisis de protocolos, para cada red
 
-- 1. (manu)
+- 1. 
 
   | Tipo de mensaje | Protocolo            | Probabilidad | Información |
   | --------------- | -------------------- | ------------ | ----------- |
@@ -37,16 +41,16 @@ Resultado para cada red
 
   Entropía: 0.077
 
-- 2. (lu)
+- 2. 
 
   | Tipo de mensaje | Protocolo   | Probabilidad | Información |
   | --------------- | ----------- | ------------ | ----------- |
-  | UNICAST         | 2048 (IPv4) | 0.99920      | 0.00266     |
-  | UNICAST         | 2054 (ARP)  | 0.00080      | 23.76       |
+  | UNICAST | 2048 | 0.99920 | 0.00115  |
+  | UNICAST | 2054 | 0.00080 | 10.28771 |
 
-  Entropía: 0.0216
+Entropia: 0.0093
 
-- 3. (elias)
+- 3. 
 
   | Tipo de mensaje | Protocolo                | Probabilidad | Información |
   | --------------- | ------------------------ | ------------ | ----------- |
@@ -61,7 +65,7 @@ Resultado para cada red
 
   Entropía: 2.111
 
-{algo}
+Viendo estos datos, podemos responder algunas incógnitas sobre los mismos.
 
 - **¿Considera que las muestras obtenidas analizadas son representativas del comportamiento general de la red?**
 
@@ -101,6 +105,98 @@ Preguntas agregadas:
 - **¿Se mantiene esta distribución estable en el tiempo?**
 
   Sí. Se replicaron los experimentos para las mismas redes 5 veces y no se observaron diferencias significativas en los resultados.
+
+### Resultados de experimentos con IP distinguidas
+Al sniffear los paquetes de ARP de nuestras redes, conservando las IP como símbolos distinguidos, presentan el siguiente comportamiento:
+
+- 1.
+Source:
+|IP | Probabilidad | Información |
+| -------- | -------- | ----- | --|
+|192.168.0.4 | 0.95000 | 0.07400 |
+|192.168.0.8 | 0.02000 | 5.64386 |
+|192.168.0.6 | 0.02000 | 5.64386 |
+|192.168.0.1 | 0.01000 | 6.64386 |
+
+Entropia: 0.3624933618603243
+
+Destination:
+|IP | Probabilidad | Información |
+| -------- | -------- | ----- | --|
+|192.168.0.1 | 0.95000 | 0.07400 |
+|192.168.0.10 | 0.02000 | 5.64386 |
+|192.168.0.6 | 0.02000 | 5.64386 |
+|192.168.0.4 | 0.01000 | 6.64386 |
+
+Entropia: 0.3624933618603243
+
+- 2.
+
+Source:
+|IP | Probabilidad | Información |
+| -------- | -------- | ----- |--|
+| 192.168.0.1 | 0.50000 | 1.00000 |
+| 192.168.0.181 | 0.50000 | 1.00000 |
+
+Entropia: 1.0
+
+Destination:
+|IP | Probabilidad | Información |
+| -------- | -------- | ----- | --|
+| 192.168.0.1 | 0.50000 | 1.00000 |
+| 192.168.0.181 | 0.50000 | 1.00000 |
+
+Entropia: 1.0
+
+- 3.
+
+Source:
+|IP | Probabilidad | Información |
+| -------- | -------- | ----- |--|
+| 192.168.1.54 | 0.63000 | 0.46204 |
+| 192.168.1.1 | 0.26000 | 1.34707 |
+| 192.168.1.51 | 0.08000 | 2.52573 |
+| 192.168.1.201 | 0.01000 | 4.60517 |
+| 192.168.1.200 | 0.01000 | 4.60517 |
+| 192.168.1.39 | 0.01000 | 4.60517 |
+
+Entropia: 0.9815348851414537
+
+Destination:
+|IP | Probabilidad | Información |
+| -------- | -------- | ----- |--|
+| 192.168.1.1 | 0.66000 | 0.41552 |
+| 192.168.1.51 | 0.10000 | 2.30259 |
+| 192.168.1.54 | 0.03000 | 3.50656 |
+| 192.168.1.200 | 0.03000 | 3.50656 |
+| 192.168.1.41 | 0.02000 | 3.91202 |
+| 192.168.1.58 | 0.02000 | 3.91202 |
+| 192.168.1.65 | 0.02000 | 3.91202 |
+| 192.168.1.33 | 0.02000 | 3.91202 |
+| 192.168.1.52 | 0.02000 | 3.91202 |
+| 192.168.1.64 | 0.02000 | 3.91202 |
+| 192.168.1.201 | 0.02000 | 3.91202 |
+| 192.168.1.39 | 0.02000 | 3.91202 |
+| 192.168.1.63 | 0.01000 | 4.60517 |
+| 192.168.1.36 | 0.01000 | 4.60517 |
+
+Entropia: 1.432919260741568
+
+- ¿La entropía de la fuente es máxima? ¿Qué sugiere esto acerca de la red?
+Si fuera máxima la entropía, la distribución de los símbolos sería uniforme, por lo que todos los dispositivos tendrían que estar enviándose o recibiendo paquetes entre sí con una porción del tráfico.
+Esto no se da en ninguna de las redes observadas, ya que en todas algún nodo -teorizamos que es el del router- domina por sobre el resto.
+
+- ¿Se pueden distinguir nodos? ¿Se les puede adjudicar alguna función específica?
+Sí, en todos existe un nodo con mayor participación del tráfico, y un segundo nodo distinguible, mientras que el resto, si existen, envían una fracción despreciable de los paquetes ARP. Creemos que el de mayor tráfico es el nodo del Router, y el segundo el de la PC con la que hacemos este trabajo.
+
+- ¿Hay evidencia parcial que sugiera que algún nodo funciona de forma anómala y/o no esperada?
+No, aunque hubiera sido interesante descubrir más dispositivos de los esperados, o uno desconocido enviando gran parte del tráfico, sugiriendo un posible actor malicioso.
+
+- ¿Existe una correspondencia entre lo que se conoce de la red y los nodos distinguidos detectados por la herramienta?
+Sí, de hecho detectamos casi exactamente lo que esperábamos, dado nuestro conocimiento de la topología de las redes.
+
+- ¿Ha encontrado paquetes ARP no esperados? ¿Se puede determinar para que sirven?
+No, los paquetes ARP que encontramos tienen operaciones 1 y 2, que se corresponden a request y responses.
 
 ## Conclusiones
 
