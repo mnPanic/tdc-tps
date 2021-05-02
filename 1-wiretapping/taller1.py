@@ -9,6 +9,8 @@ import scapy.all as scapy
 S1 = {}
 S2_src = {}
 S2_dst = {}
+S2_hw_dst = {}
+S2_hw_src = {}
 
 def mostrar_fuente(S):
     N = sum(S.values())
@@ -35,6 +37,8 @@ def analyze_pkg(pkt):
     S1[s_i] += 1.0
 
 def analyze_pkg_S2(pkt):
+    hw_src = pkt[scapy.ARP].hwsrc
+    hw_dst = pkt[scapy.ARP].hwdst
     ip_src = pkt[scapy.ARP].psrc
     ip_dst = pkt[scapy.ARP].pdst
 
@@ -47,6 +51,16 @@ def analyze_pkg_S2(pkt):
         S2_src[ip_src] = 0
     
     S2_src[ip_src] += 1
+    
+    if hw_dst not in S2_hw_dst:
+        S2_hw_dst[hw_dst] = 0
+    
+    S2_hw_dst[hw_dst] += 1
+
+    if hw_src not in S2_hw_src:
+        S2_hw_src[hw_src] = 0
+    
+    S2_hw_src[hw_src] += 1
 
 def callback_s2(pkt):
     analyze_pkg_S2(pkt)
@@ -55,6 +69,10 @@ def callback_s2(pkt):
     mostrar_fuente(S2_src)
     print("dst:")
     mostrar_fuente(S2_dst)
+    print("src_hw:")
+    mostrar_fuente(S2_hw_src)
+    print("dst_hw:")
+    mostrar_fuente(S2_hw_dst)
 
     if sum(S2_src.values()) == MAX_PACKETS_S2:
         quit()
@@ -67,8 +85,6 @@ def callback(pkt):
         quit()
 
 def main():
-    #scapy.sniff(prn=callback)
-
     scapy.sniff(prn=callback_s2, filter="arp", store=0)
 
 if __name__ == "__main__":
