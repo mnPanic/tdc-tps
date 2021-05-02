@@ -13,11 +13,11 @@ S2_dst = {}
 def mostrar_fuente(S):
     N = sum(S.values())
     simbolos = sorted(S.items(), key=lambda x: -x[1])
-    print("\n".join([ f"{d}: p: {k/N:.5f}, i: {-math.log(k/N):.5f}" for d,k in simbolos ]))
+    print("\n".join([ f"{d}: p: {k/N:.5f}, i: {-math.log(k/N, 2):.5f}" for d,k in simbolos ]))
     
     entropia = 0
     for _, k in simbolos:
-        entropia += -math.log(k/N) * k/N
+        entropia += -math.log(k/N, 2) * k/N
 
     print("Entropia:", entropia)
     print(N)
