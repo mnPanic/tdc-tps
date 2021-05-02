@@ -32,14 +32,14 @@ Resultado de análisis de protocolos, para cada red
 
   | Tipo de mensaje | Protocolo            | Probabilidad | Información |
   | --------------- | -------------------- | ------------ | ----------- |
-  | UNICAST         | 2048 (IPv4)          | 0.99713      | 0.0095      |
-  | BROADCAST       | 2054 (ARP)           | 0.00153      | 21.60103    |
-  | BROADCAST       | 2048 (IPv4)          | 0.00067      | 24.3774     |
-  | UNICAST         | 35130 (IEEE 1905.1a) | 0.00027      | 27.4317     |
-  | UNICAST         | 35020 (LLDP)         | 0.00027      | 27.4317     |
-  | UNICAST         | 2054 (ARP)           | 0.00013      | 29.742      |
+  | UNICAST         | 2048 (IPv4)          | 0.99640      | 0.00520     |
+  | BROADCAST       | 2054 (ARP)           | 0.00220      | 8.82828     |
+  | BROADCAST       | 2048 (IPv4)          | 0.00073      | 10.41324    |
+  | UNICAST         | 35130 (IEEE 1905.1a) | 0.00027      | 11.87267    |
+  | UNICAST         | 35020 (LLDP)         | 0.00027      | 11.87267    |
+  | UNICAST         | 2054 (ARP)           | 0.00013      | 12.87267    |
 
-  Entropía: 0.077
+  Entropia: 0.0403
 
 - 2. 
 
