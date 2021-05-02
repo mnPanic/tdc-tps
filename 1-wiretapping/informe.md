@@ -13,8 +13,8 @@ Para la ejecución de los experimentos se partió del código provisto por la c�
 Se ejecutó el programa en tres redes distintas el 1/05/2021 aproximadamente a las 20:00 (GMT-3).
 
 - red 1
-- red 2
-- red 2
+- red 2 : Solo consta de una Notebook, el router y un celular conectados por Wi-Fi.
+- red 3
 
 
 ### Fuente de memoria nula para distinguir hosts de la red
@@ -90,9 +90,9 @@ Viendo estos datos, podemos responder algunas incógnitas sobre los mismos.
   Los protocolos esperados encontrados fueron IPv4, IPv6 (Transportan datos de usuario) y ARP (Protocolo de control). Luego se encontraron estos protocolos que no se esperaba observar
 
   {explicar funcionalidades}
-  - 35020 (LLDP)
-  - 35130 (IEEE 1905.1a)
-  - 33024 (IEEE 802.1Q VLAN)
+  - 35020 (LLDP) Link Layer Discovery Protocol, usado por dispositivos para darse a conocer en la LAN.
+  - 35130 (IEEE 1905.1a) Protocolo usado para redes domésticas (con soporte para wireless).
+  - 33024 (IEEE 802.1Q VLAN) Estándar de redes para VLAN en Ethernet.
   - 34999 (OUI EE)
   - LLDP: IEEE Std 802.1AB - Link Layer Discovery Protocol
 
@@ -196,7 +196,7 @@ No, aunque hubiera sido interesante descubrir más dispositivos de los esperados
 Sí, de hecho detectamos casi exactamente lo que esperábamos, dado nuestro conocimiento de la topología de las redes.
 
 - ¿Ha encontrado paquetes ARP no esperados? ¿Se puede determinar para que sirven?
-No, los paquetes ARP que encontramos tienen operaciones 1 y 2, que se corresponden a request y responses.
+No, los paquetes ARP que encontramos tienen operaciones 1 y 2, que se corresponden a request y responses. En la red 2 hay igual cantidad de tipo 1 y 2, pero en la red 1 esto se vuelve muy asimétrico: hay muchos mas paquetes request que response. No supimos explicar este fenómeno.
 
 ## Conclusiones
 
