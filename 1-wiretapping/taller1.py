@@ -11,6 +11,7 @@ S2_src = {}
 S2_dst = {}
 S2_hw_dst = {}
 S2_hw_src = {}
+ops = {}
 
 def mostrar_fuente(S):
     N = sum(S.values())
@@ -37,10 +38,11 @@ def analyze_pkg(pkt):
     S1[s_i] += 1.0
 
 def analyze_pkg_S2(pkt):
-    hw_src = pkt[scapy.ARP].hwsrc
-    hw_dst = pkt[scapy.ARP].hwdst
-    ip_src = pkt[scapy.ARP].psrc
-    ip_dst = pkt[scapy.ARP].pdst
+    arp_pkt = pkt[scapy.ARP]
+    hw_src = arp_pkt.hwsrc
+    hw_dst = arp_pkt.hwdst
+    ip_src = arp_pkt.psrc
+    ip_dst = arp_pkt.pdst
 
     if ip_dst not in S2_dst:
         S2_dst[ip_dst] = 0
@@ -62,6 +64,13 @@ def analyze_pkg_S2(pkt):
     
     S2_hw_src[hw_src] += 1
 
+    # https://github.com/secdev/scapy/blob/11832deee0067e1db2660ff1f61e5d4e979adf27/scapy/layers/l2.py#L391
+    if arp_pkt.op not in ops:
+        ops[arp_pkt.op] = 0
+    
+    ops[arp_pkt.op] += 1
+
+
 def callback_s2(pkt):
     analyze_pkg_S2(pkt)
 
@@ -74,6 +83,9 @@ def callback_s2(pkt):
     print("dst_hw:")
     mostrar_fuente(S2_hw_dst)
 
+    print("ARP operations")
+    print(ops)
+
     if sum(S2_src.values()) == MAX_PACKETS_S2:
         quit()
 
@@ -85,6 +97,7 @@ def callback(pkt):
         quit()
 
 def main():
+    #scapy.sniff(prn=callback)
     scapy.sniff(prn=callback_s2, filter="arp", store=0)
 
 if __name__ == "__main__":
