@@ -67,9 +67,9 @@ def callback(pkt):
         quit()
 
 def main():
-    #scapy.sniff(prn=callback)
+    scapy.sniff(prn=callback)
 
-    scapy.sniff(prn=callback_s2, filter="arp", store=0)
+    #scapy.sniff(prn=callback_s2, filter="arp", store=0)
 
 if __name__ == "__main__":
     main()
