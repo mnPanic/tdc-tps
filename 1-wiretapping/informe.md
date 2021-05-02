@@ -28,38 +28,38 @@ Resultado para cada red
 
   | Tipo de mensaje | Protocolo            | Probabilidad | Información |
   | --------------- | -------------------- | ------------ | ----------- |
-  | UNICAST         | 2048 (IPv4)          | 0.99713      | 0.00287     |
-  | BROADCAST       | 2054 (ARP)           | 0.00153      | 6.48031     |
-  | BROADCAST       | 2048 (IPv4)          | 0.00067      | 7.31322     |
-  | UNICAST         | 35130 (IEEE 1905.1a) | 0.00027      | 8.22951     |
-  | UNICAST         | 35020 (LLDP)         | 0.00027      | 8.22951     |
-  | UNICAST         | 2054 (ARP)           | 0.00013      | 8.92266     |
+  | UNICAST         | 2048 (IPv4)          | 0.99713      | 0.0095      |
+  | BROADCAST       | 2054 (ARP)           | 0.00153      | 21.60103    |
+  | BROADCAST       | 2048 (IPv4)          | 0.00067      | 24.3774     |
+  | UNICAST         | 35130 (IEEE 1905.1a) | 0.00027      | 27.4317     |
+  | UNICAST         | 35020 (LLDP)         | 0.00027      | 27.4317     |
+  | UNICAST         | 2054 (ARP)           | 0.00013      | 29.742      |
 
-  Entropía: 0.0233
+  Entropía: 0.077
 
 - 2. (lu)
 
   | Tipo de mensaje | Protocolo   | Probabilidad | Información |
   | --------------- | ----------- | ------------ | ----------- |
-  | UNICAST         | 2048 (IPv4) | 0.99920      | 0.00080     |
-  | UNICAST         | 2054 (ARP)  | 0.00080      | 7.13097     |
+  | UNICAST         | 2048 (IPv4) | 0.99920      | 0.00266     |
+  | UNICAST         | 2054 (ARP)  | 0.00080      | 23.76       |
 
-  Entropía: 0.0065
+  Entropía: 0.0216
 
 - 3. (elias)
 
   | Tipo de mensaje | Protocolo                | Probabilidad | Información |
   | --------------- | ------------------------ | ------------ | ----------- |
-  | UNICAST         | 2048 (IPv4)              | 0.96774      | 0.03280     |
-  | UNICAST         | 34525 (IPv6)             | 0.01453      | 4.23138     |
-  | BROADCAST       | 33024 (IEEE 802.1Q VLAN) | 0.00640      | 5.05152     |
-  | BROADCAST       | 2054 (ARP)               | 0.00507      | 5.28514     |
-  | UNICAST         | 33024 (IEEE 802.1Q VLAN) | 0.00380      | 5.57282     |
-  | UNICAST         | 2054 (ARP)               | 0.00120      | 6.72550     |
-  | BROADCAST       | 2048 (IPv4)              | 0.00113      | 6.78266     |
-  | BROADCAST       | 34999 (OUI EE)           | 0.00013      | 8.92272     |
+  | UNICAST         | 2048 (IPv4)              | 0.96774      | 0.047       |
+  | UNICAST         | 34525 (IPv6)             | 0.01453      | 14.1        |
+  | BROADCAST       | 33024 (IEEE 802.1Q VLAN) | 0.00640      | 16.83       |
+  | BROADCAST       | 2054 (ARP)               | 0.00507      | 17.6        |
+  | UNICAST         | 33024 (IEEE 802.1Q VLAN) | 0.00380      | 18.56       |
+  | UNICAST         | 2054 (ARP)               | 0.00120      | 22.4        |
+  | BROADCAST       | 2048 (IPv4)              | 0.00113      | 22.6        |
+  | BROADCAST       | 34999 (OUI EE)           | 0.00013      | 29.73       |
 
-  Entropía: 0.1905
+  Entropía: 2.111
 
 {algo}
 
