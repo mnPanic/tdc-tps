@@ -198,10 +198,10 @@ Al sniffear los paquetes de ARP de nuestras redes, conservando las IP como símb
 - **¿La entropía de la fuente es máxima? ¿Qué sugiere esto acerca de la red?**
   Si fuera máxima la entropía, la distribución de los símbolos sería uniforme, por lo que todos los dispositivos tendrían que estar enviándose o recibiendo paquetes entre sí con una porción del tráfico.
 
-  Esto no se da en ninguna de las redes observadas, ya que en todas algún nodo -teorizamos que es el del router- domina por sobre el resto.
+  Esto no se da en ninguna de las redes observadas, ya que en todas algún nodo -teorizamos que es el del router- domina por sobre el resto. Con excepción de la red 2, que tiene dos hosts con exactamente la mitad del tráfico cada uno, y presenta la entropía máxima para dos símbolos, aunque no supimos explicar por qué se da esto. Notar que esta es la entropía máxima para la distribución de dos símbolos, pero la entropía podría aumentar arbitrariamente si la cantidad de símbolos -en este caso hosts- aumentara.
 
 - **¿Se pueden distinguir nodos? ¿Se les puede adjudicar alguna función específica?**
-  Sí, en todos existe un nodo con mayor participación del tráfico, y un segundo nodo distinguible, mientras que el resto, si existen, envían una fracción despreciable de los paquetes ARP. Creemos que el de mayor tráfico es el nodo del Router, y el segundo el de la PC con la que hacemos este trabajo.
+  Sí, en todos existe un nodo con mayor participación del tráfico, y un segundo nodo distinguible, mientras que el resto, si existen, envían una fracción despreciable de los paquetes ARP. Creemos que el de mayor tráfico es el nodo del Router, y el segundo el de la PC con la que hacemos este trabajo. Esto se da en las dos redes "normales" pero no en la 2, que solo tiene dos nodos que emiten la misma cantidad de paquetes. 
 
 - **¿Hay evidencia parcial que sugiera que algún nodo funciona de forma anómala y/o no esperada?**
   No, aunque hubiera sido interesante descubrir más dispositivos de los esperados, o uno desconocido enviando gran parte del tráfico, sugiriendo un posible actor malicioso.
