@@ -187,7 +187,7 @@ A continuación se presenta el comportamiento observado al sniffear los paquetes
 
 - **¿Hay evidencia parcial que sugiera que algún nodo funciona de forma anómala y/o no esperada?**
 
-  Sí, para las redes 1 y 3 se observa un nodo que presenta la mayor parte del tráfico saliente, lo cual indicaría que es aquel que más frecuente requiere volver a mapear las direcciones. Creemos que esto puede deberse a que presenta una memoria caché de tamaño pequeño o un TTL corto en comparación a los demás nodos.
+  Sí, para las redes 1 y 3 se observa un nodo que presenta la mayor parte del tráfico saliente, lo cual indicaría que es aquel que más frecuentemente requiere volver a mapear las direcciones. Creemos que esto puede deberse a que presenta una memoria caché de tamaño pequeño o un TTL corto en comparación a los demás nodos.
 
 - **¿Existe una correspondencia entre lo que se conoce de la red y los nodos distinguidos detectados por la herramienta?**
 
@@ -195,7 +195,7 @@ A continuación se presenta el comportamiento observado al sniffear los paquetes
 
 - **¿Ha encontrado paquetes ARP no esperados? ¿Se puede determinar para que sirven?**
 
-  No, los paquetes ARP que encontrados tienen operaciones 1 (*request*) y 2 (*response*). En la red 2, hay igual cantidad de ambos tipos de paquetes. Sin embargo, en las redes 1 y 3 esto se vuelve muy asimétrico, pues existen mas paquetes de *request*. No se logró dilucidar a qué se debe este fenómeno.
+  No, los paquetes ARP encontrados tienen operaciones 1 (*request*) y 2 (*response*). En la red 2, hay igual cantidad de ambos tipos de paquetes. Sin embargo, en las redes 1 y 3 esto se vuelve muy asimétrico, pues existen mas paquetes de *request*. No se logró dilucidar a qué se debe este fenómeno.
 
 ## Conclusiones
 
