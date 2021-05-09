@@ -12,33 +12,35 @@
 
 <!-- 200 -->
 
-En este trabajo se elabora un programa que modela el tráfico de una red con dos fuentes de memoria nula distintas. Por un lado, analizaremos todos los paquetes que circulan por la red, que serán distinguidos por el tipo de protocolo y la dirección destino (*UNICAST* o *BROADCAST*). Por el otro, analizamos limitándonos a los paquetes ARP distinguiéndolos por direccion de destino y fuente para enumerar, finalmente, a todos los hosts de una red.
+En este trabajo se elabora un programa que modela el tráfico de una red con dos fuentes de memoria nula distintas. Primero, analizaremos todos los paquetes que circulan por la red, que serán distinguidos por el tipo de protocolo y la dirección destino (*UNICAST* o *BROADCAST*). Finalmente, analizaremos únicamente los paquetes ARP distinguiéndolos por direccion de destino y fuente para enumerar todos los *hosts* de una red.
 
 ## Métodos y condiciones de los experimentos
 
 <!-- 400 -->
 
-Para la ejecución de los experimentos se partió del código provisto por la cátedra, extendiendo el método `mostrar_fuente`, agregándole el cálculo de la información de cada símbolo y la entropía de la fuente para 15000 tramas.
+Para la ejecución de los experimentos se partió del código provisto por la cátedra, extendiendo el método `mostrar_fuente`, agregándole el cálculo de la información de cada símbolo y la entropía de la fuente.
 
-Se ejecutó el programa en tres redes distintas el 1/05/2021 aproximadamente a las 20:00 (GMT-3).
+La ejecución se realizó para 15000 tramas en tres redes domésticas distintas el 1/05/2021 aproximadamente a las 20:00 (GMT-3).
 
-- Red 1 (Manuel): Consta de una computadora de escritorio conectada por UTP, un celular y una tele.
-- Red 2 (Luciano): Solo consta de una Notebook, el router y un celular conectados por Wi-Fi.
-- Red 3 (Elías): Consta de 11 dispositivos. 2 Notebooks, 3 televisores, 2 decodificadores, 1 impresora y 3 celulares.
+- Red 1 (Manuel): Consta de una computadora de escritorio conectada por UTP, dos celulares y una televisión.
+- Red 2 (Luciano): Solo consta de una notebook, el router y un celular conectados por Wi-Fi.
+- Red 3 (Elías): Consta de 11 dispositivos. 2 notebooks, 3 televisores, 2 decodificadores, 1 impresora y 3 celulares conectado vía WiFi.
 
-### Fuente de memoria nula para distinguir hosts de la red
+### Distinción de *hosts*
 
-Para hallar los hosts conectados a una red determinada, bastará con hallar todas las IPs que participan de la comunicación en el medio compartido. Esto es: todas las que envían o reciben paquetes ARP.
+Para distinguir los *hosts* conectados a una red determinada, bastará con hallar todas las IPs que participan de la comunicación en el medio compartido, es decir, todas las que envían o reciben paquetes ARP.
 
-Para esto, se eligió modelar una fuente de memoria nula S2, en la que tratamos como símbolo distinguido a cada IP de fuente en un paquete ARP. También se eligió modelar otra fuente, en la que los símbolos son las IP de destino, y se observó las distribuciones de ambas, y cuántos nodos aparecían.
+Para esto, se eligió modelar una fuente de memoria nula S2, donde cada símbolo representa cada IP de fuente en un paquete ARP. Además, se eligió modelar otra fuente de memoria nula, donde los símbolos son las IP de destino. Se observaron las distribuciones de ambas y cuántos nodos aparecían en cada una.
 
 ## Resultados de los experimentos
 
 <!-- 600 -->
 
-Resultado de análisis de protocolos, para cada red
+Resultado de análisis de protocolos para cada red.
 
-1. (Manuel)
+1. Red de Manuel
+
+    Entropía: 0.0403
 
   | Tipo de mensaje | Protocolo            | Probabilidad | Información |
   | --------------- | -------------------- | ------------ | ----------- |
@@ -49,18 +51,18 @@ Resultado de análisis de protocolos, para cada red
   | UNICAST         | 35020 (LLDP)         | 0.00027      | 11.87267    |
   | UNICAST         | 2054 (ARP)           | 0.00013      | 12.87267    |
 
-  Entropía: 0.0403
+2. Red de Luciano
 
-2. (Luciano)
+    Entropía: 0.0093
 
-  | Tipo de mensaje | Protocolo | Probabilidad | Información |
-  | --------------- | --------- | ------------ | ----------- |
-  | UNICAST         | 2048      | 0.99920      | 0.00115     |
-  | UNICAST         | 2054      | 0.00080      | 10.28771    |
+  | Tipo de mensaje | Protocolo     | Probabilidad | Información |
+  | --------------- | ------------- | ------------ | ----------- |
+  | UNICAST         | 2048 (IP)     | 0.99920      | 0.00115     |
+  | UNICAST         | 2054 (ARP)    | 0.00080      | 10.28771    |
 
-  Entropía: 0.0093
+3. Red de Elías
 
-3. (Elías)
+    Entropía: 2.111
 
   | Tipo de mensaje | Protocolo                | Probabilidad | Información |
   | --------------- | ------------------------ | ------------ | ----------- |
@@ -73,9 +75,7 @@ Resultado de análisis de protocolos, para cada red
   | BROADCAST       | 2048 (IPv4)              | 0.00113      | 22.6        |
   | BROADCAST       | 34999 (OUI EE)           | 0.00013      | 29.73       |
 
-  Entropía: 2.111
-
-Viendo estos datos, podemos responder algunas incógnitas sobre los mismos.
+Viendo estos datos, podemos responder algunas de las incógnitas planteadas.
 
 - **¿Considera que las muestras obtenidas analizadas son representativas del comportamiento general de la red?**
 
@@ -83,21 +83,19 @@ Viendo estos datos, podemos responder algunas incógnitas sobre los mismos.
 
 - **¿Hay alguna relación entre la entropía de las redes y alguna característica de las mismas (ej.: tamaño, tecnología, etc)?**
 
-  A mayor tamaño y diversidad tecnológica de la red (e.g. usar IPv6), mayor la entropía.
+  A mayor tamaño de la red, es decir, mayor cantidad de dispositivos simultáneamente conectados, y mayor diversidad tecnológica (e.g. usar IPv6) mayor será la entropía.
   
 - **¿En alguna red la entropía de la fuente alcanza la entropía máxima teórica?**
-  
-  El máximo teórico se daría si cada paquete presentara un símbolo nuevo. En ese caso, la entropía divergería. Evidentemente, hay un límite en la cantidad de protocolos observables, y estuvimos lejos del límite habiendo en total menos 10 protocolos distintos observados que pueden ser fácilmente representarse en 3 bits.
 
-- **¿Considera significativa la cantidad de tráfico broadcast sobre el tráfico total?**
+  En una fuente de memoria nula la entropía máxima se alcanza cuando todos los símbolos que emite son equiprobables. Esto no sucede en la redes estudiadas, dado que siempre existe un símbolo que predomina.
+
+- **¿Considera significativa la cantidad de tráfico *broadcast* sobre el tráfico total?**
   
-  La cantidad de tráfico broadcast es despreciable en comparación al unicast.
+  La cantidad de tráfico *broadcast* es despreciable en comparación al *unicast*.
 
 - **¿Cuál es la función de cada uno de los protocolos encontrados? ¿Cuáles son protocolos de control y cuáles transportan datos de usuario? ¿Ha encontrado protocolos no esperados? ¿Puede describirlos?**
 
-  Se encontraron los siguientes protocolos (Buscados en [IANA IEEE 802 Numbers](https://www.iana.org/assignments/ieee-802-numbers/ieee-802-numbers.xhtml) y Wireshark)
-
-  Los protocolos esperados encontrados fueron IPv4, IPv6 (Transportan datos de usuario) y ARP (Protocolo de control). Luego se encontraron estos protocolos que no se esperaba observar
+  Los protocolos esperados encontrados fueron IPv4, IPv6 (Transportan datos de usuario) y ARP (Protocolo de control). Luego se encontraron estos protocolos que no se esperaba observar que fueron buscados en [IANA IEEE 802 Numbers](https://www.iana.org/assignments/ieee-802-numbers/ieee-802-numbers.xhtml) y Wireshark.
 
   - `35020` (LLDP) Link Layer Discovery Protocol, usado por dispositivos para darse a conocer en la LAN.
   - `35130` (IEEE 1905.1a) Protocolo usado para redes domésticas (con soporte para wireless).
@@ -105,19 +103,13 @@ Viendo estos datos, podemos responder algunas incógnitas sobre los mismos.
   - `34999` (OUI EE)
   - `35020` (LLDP): IEEE Std 802.1AB - Link Layer Discovery Protocol
 
-Preguntas agregadas:
+### Resultados de experimentos de distinción de *hosts*
 
-- **¿Se mantiene esta distribución estable en el tiempo?**
+A continuación se presenta el comportamiento observado al sniffear los paquetes ARP en las tres redes descritas al utilizar las IP cómo símbolos de la fuente.
 
-  Sí. Se replicaron los experimentos para las mismas redes 5 veces y no se observaron diferencias significativas en los resultados.
-
-### Resultados de experimentos con IP distinguidas
-
-Al sniffear los paquetes de ARP de nuestras redes, conservando las IP como símbolos distinguidos, presentan el siguiente comportamiento:
-
-1. (Manuel)
+1. Red de Manuel
   
-  Source:
+  - Fuente (Entropía: 0.3625)
 
   | IP          | Probabilidad | Información |
   | ----------- | ------------ | ----------- |
@@ -126,9 +118,7 @@ Al sniffear los paquetes de ARP de nuestras redes, conservando las IP como símb
   | 192.168.0.6 | 0.02000      | 5.64386     |
   | 192.168.0.1 | 0.01000      | 6.64386     |
 
-  Entropía: 0.3625
-
-  Destination:
+  Destino (Entropía: 0.3625)
 
   | IP           | Probabilidad | Información |
   | ------------ | ------------ | ----------- |
@@ -137,31 +127,25 @@ Al sniffear los paquetes de ARP de nuestras redes, conservando las IP como símb
   | 192.168.0.6  | 0.02000      | 5.64386     |
   | 192.168.0.4  | 0.01000      | 6.64386     |
 
-  Entropía: 0.3625
+2. Red de Luciano
 
-2. (Luciano)
-
-  Source:
+  - Fuente (Entropía: 1.0)
 
   | IP            | Probabilidad | Información |
   | ------------- | ------------ | ----------- |
   | 192.168.0.1   | 0.50000      | 1.00000     |
   | 192.168.0.181 | 0.50000      | 1.00000     |
 
-  Entropía: 1.0
-
-  Destination:
+  - Destino (Entropía: 1.0)
 
   | IP            | Probabilidad | Información |
   | ------------- | ------------ | ----------- |
   | 192.168.0.1   | 0.50000      | 1.00000     |
   | 192.168.0.181 | 0.50000      | 1.00000     |
 
-  Entropía: 1.0
+3. Red de Elías
 
-3. (Elías)
-
-  Source:
+  - Fuente (Entropía: 0.9815)
 
   | IP            | Probabilidad | Información |
   | ------------- | ------------ | ----------- |
@@ -172,9 +156,7 @@ Al sniffear los paquetes de ARP de nuestras redes, conservando las IP como símb
   | 192.168.1.200 | 0.01000      | 4.60517     |
   | 192.168.1.39  | 0.01000      | 4.60517     |
 
-  Entropía: 0.9815
-
-  Destination:
+  - Destino (Entropía: 1.4330)
 
   | IP            | Probabilidad | Información |
   | ------------- | ------------ | ----------- |
@@ -193,24 +175,27 @@ Al sniffear los paquetes de ARP de nuestras redes, conservando las IP como símb
   | 192.168.1.63  | 0.01000      | 4.60517     |
   | 192.168.1.36  | 0.01000      | 4.60517     |
 
-  Entropía: 1.4330
-
 - **¿La entropía de la fuente es máxima? ¿Qué sugiere esto acerca de la red?**
-  Si fuera máxima la entropía, la distribución de los símbolos sería uniforme, por lo que todos los dispositivos tendrían que estar enviándose o recibiendo paquetes entre sí con una porción del tráfico.
-
-  Esto no se da en ninguna de las redes observadas, ya que en todas algún nodo -teorizamos que es el del router- domina por sobre el resto. Con excepción de la red 2, que tiene dos hosts con exactamente la mitad del tráfico cada uno, y presenta la entropía máxima para dos símbolos, aunque no supimos explicar por qué se da esto. Notar que esta es la entropía máxima para la distribución de dos símbolos, pero la entropía podría aumentar arbitrariamente si la cantidad de símbolos -en este caso hosts- aumentara.
+  
+  Como se explicó anteriormente, la entropía máxima se da cuando la distribución de los símbolos es uniforme. Esto no se observa en la redes 1 y 3, lo cual sugiere que no todos los nodos están participando de forma equitativa en la resolución de direcciones. Mientras tanto, sí se observa un nivel de entropía máxima para la red 2, lo que probablemente se pueda adjudicar a la presencia de pocos nodos.
 
 - **¿Se pueden distinguir nodos? ¿Se les puede adjudicar alguna función específica?**
-  Sí, en todos existe un nodo con mayor participación del tráfico, y un segundo nodo distinguible, mientras que el resto, si existen, envían una fracción despreciable de los paquetes ARP. Creemos que el de mayor tráfico es el nodo del Router, y el segundo el de la PC con la que hacemos este trabajo. Esto se da en las dos redes "normales" pero no en la 2, que solo tiene dos nodos que emiten la misma cantidad de paquetes. 
+
+  Sí, se pueden distinguir los nodos de las redes a través de las IPs.
+
+  Para las redes 1 y 3, creemos que se le puede adjudicar al nodo con mayor proporción de tráfico entrante la función de *router*. Esto es porque para que los paquetes salgan de la red deben pasar por el *router*, por lo tanto los dispositivos necesitan conocer su dirección MAC. En cambio, para la red 2, la distribución es uniforme.
 
 - **¿Hay evidencia parcial que sugiera que algún nodo funciona de forma anómala y/o no esperada?**
-  No, aunque hubiera sido interesante descubrir más dispositivos de los esperados, o uno desconocido enviando gran parte del tráfico, sugiriendo un posible actor malicioso.
+
+  Sí, para las redes 1 y 3 se observa un nodo que presenta la mayor parte del tráfico saliente, lo cual indicaría que es aquel que más frecuente requiere volver a mapear las direcciones. Creemos que esto puede deberse a que presenta una memoria caché de tamaño pequeño o un TTL corto en comparación a los demás nodos.
 
 - **¿Existe una correspondencia entre lo que se conoce de la red y los nodos distinguidos detectados por la herramienta?**
-  Sí, de hecho detectamos casi exactamente lo que esperábamos, dado nuestro conocimiento de la topología de las redes.
+
+  Sí, se detectó casi exactamente lo esperado, dado el conocimiento de la topología de las redes.
 
 - **¿Ha encontrado paquetes ARP no esperados? ¿Se puede determinar para que sirven?**
-  No, los paquetes ARP que encontramos tienen operaciones 1 y 2, que se corresponden a request y responses. En la red 2 hay igual cantidad de tipo 1 y 2, pero en las redes 1 y 3 esto se vuelve muy asimétrico: hay muchos mas paquetes request que response. No supimos explicar este fenómeno.
+
+  No, los paquetes ARP que encontrados tienen operaciones 1 (*request*) y 2 (*response*). En la red 2, hay igual cantidad de ambos tipos de paquetes. Sin embargo, en las redes 1 y 3 esto se vuelve muy asimétrico, pues existen mas paquetes de *request*. No se logró dilucidar a qué se debe este fenómeno.
 
 ## Conclusiones
 
@@ -218,8 +203,8 @@ Al sniffear los paquetes de ARP de nuestras redes, conservando las IP como símb
 
 El trabajo no presentó dificultades significativas, aunque generó dudas respecto de la falta de paquetes ARP en broadcast para la red número 2, que aún no se pudieron resolver.
 
-Además, se vuelve evidente que la mayor parte del tráfico termina siendo IPv4 unicast, lo cual se condice con lo esperado.
+Además, como era esperado, se observa que la mayor parte del tráfico termina siendo IPv4 *unicast*.
 
-Al observar a través de Wireshark el tráfico de paquetes de las redes, nos llamó la atención la cantidad elevada de paquetes UDP con respecto a la de TCP que, creemos, se debe a la transferencia de datos multimedia ya que estábamos compartiendo audio y video a través de Discord.
+Al sniffear el tráfico de paquetes de las redes a través de Wireshark, nos resultó llamativa la cantidad elevada de paquetes UDP con respecto a la de TCP. Creemos que esto puede deberse a la transferencia de datos multimedia generada al realizar *streaming* de audio y video a través de Discord.
 
-Finalmente, nos resultó sumamente interesante que mediante un análisis tan simple de los paquetes ARP se pueda conocer la topología de una red. Probablemente sea fructífero realizarlo en una red pública de tamaño mayor y ver cómo se comporta.
+Finalmente, nos resultó sumamente interesante que mediante un análisis tan simple del tráfico de paquetes ARP se pueda conocer la topología de una red. Probablemente valdría la pena realizarlo en una red pública de tamaño mayor para ver cómo se comporta.
