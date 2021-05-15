@@ -1,29 +1,47 @@
 #!/usr/bin/env python3
 
+import statistics
 import sys
+import scapy.all as scp
+import time
 
-from scapy.all import *
-from time import *
 
-responses = {}
+TTL_MAX = 31
+ITERATIONS = 5
 
-for i in range(5):
-    print()
+hops = [{} for i in range(TTL_MAX)]
+output = [{} for i in range(TTL_MAX)]
 
-    for ttl in range(1,25):
-        request = IP(dst=sys.argv[1], ttl=ttl) / ICMP()
+print("HOLA, ESTE ES EL TP DE TRACEROUTE")
+print()
 
-        t_i = time()
-        ans = sr1(request, verbose=False, timeout=0.8)
-        t_f = time()
+for ttl in range(1, TTL_MAX):
+    for i in range(ITERATIONS):
+        request = scp.IP(dst=sys.argv[1], ttl=ttl) / scp.ICMP()
+
+        t_i = time.time()
+        response = scp.sr1(request, verbose=False, timeout=0.8)
+        t_f = time.time()
 
         rtt = (t_f - t_i)*1000
 
-        if ans is not None:
-            if ttl not in responses:
-                responses[ttl] = []
+        if response is not None:
+            ip = response.src
 
-            responses[ttl].append((ans.src, rtt))
+            if ip not in hops[ttl]:
+                hops[ttl][ip] = []
 
-            if ttl in responses:
-                print(ttl, responses[ttl])
+            hops[ttl][ip].append(rtt)
+
+    if hops[ttl] != {}:
+        max_key, max_value = max(hops[ttl].items(), key=lambda t : len(t[1]))
+
+        output[ttl] = {
+            "IP": max_key,
+            "median": statistics.median(max_value),
+            "sd": statistics.stdev(max_value),
+        }
+
+        print(f'{ttl:2} {output[ttl]["IP"]:15} \t\t {output[ttl]["median"]:.2f} ms \t {output[ttl]["sd"]:.2f} ms')
+    else:
+        print(f'{ttl:2} * * *')
