@@ -5,72 +5,83 @@ import sys
 import scapy.all as scp
 import time
 
+from typing import List, Dict, Tuple
 
 TTL_MAX = 30
 ITERATIONS = 5
 
-hops = [{} for i in range(TTL_MAX + 1)]
-output = [{} for i in range(TTL_MAX + 1)]
+def stdev(l: List[float]):
+    if len(l) == 1:
+        return 0
 
-print()
+    return statistics.stdev(l)
 
-for ttl in range(1, TTL_MAX + 1):
-    for i in range(ITERATIONS):
-        request = scp.IP(dst=sys.argv[1], ttl=ttl) / scp.ICMP()
+def traceroute(dst_ip: str) -> Tuple[List[Dict[str, List[float]]], List[Dict[str, dict]]]:
 
-        t_i = time.time()
-        response = scp.sr1(request, verbose=False, timeout=0.8)
-        t_f = time.time()
+    hops = [{} for i in range(TTL_MAX + 1)]
+    hops_stats = [{} for i in range(TTL_MAX + 1)]
 
-        rtt = (t_f - t_i)*1000
+    for ttl in range(1, TTL_MAX + 1):
+        for i in range(ITERATIONS):
+            request = scp.IP(dst=dst_ip, ttl=ttl) / scp.ICMP()
 
-        if response is not None:
-            ip = response.src
+            t_i = time.time()
+            response = scp.sr1(request, verbose=False, timeout=0.8)
+            t_f = time.time()
 
-            if ip not in hops[ttl]:
-                hops[ttl][ip] = []
+            rtt = (t_f - t_i)*1000
 
-            hops[ttl][ip].append(rtt)
+            if response is not None:
+                ip = response.src
 
-    if hops[ttl] != {}:
-        max_key, max_value = max(hops[ttl].items(), key=lambda t : len(t[1]))
+                if ip not in hops[ttl]:
+                    hops[ttl][ip] = []
 
-        output[ttl] = {
-            "IP": max_key,
-            "median": statistics.median(max_value),
-            "sd": statistics.stdev(max_value),
-        }
+                hops[ttl][ip].append(rtt)
 
-        print(f'{ttl:2} {output[ttl]["IP"]:15} \t\t {output[ttl]["median"]:.2f} ms \t {output[ttl]["sd"]:.2f} ms')
-    else:
-        print(f'{ttl:2} * * *')
+        if hops[ttl] != {}:
+            max_key, max_value = max(hops[ttl].items(), key=lambda t : len(t[1]))
 
-# RTT by hops
+            hops_stats[ttl] = {
+                "IP": max_key,
+                "median": statistics.median(max_value),
+                "sd": stdev(max_value),
+            }
 
-print()
-print("RTT por saltos")
+            print(f'{ttl:2} {hops_stats[ttl]["IP"]:15} \t\t {hops_stats[ttl]["median"]:.2f} ms \t {hops_stats[ttl]["sd"]:.2f} ms')
+        else:
+            print(f'{ttl:2} * * *')
 
-rtt_hops = []
+    return hops, hops_stats
 
-for ttl in range(1, TTL_MAX):
-    if "median" not in output[ttl]:
-        rtt_hops.append(-1)
-        continue
+def rtt_hops(hops_stats: List[Dict[str, dict]]) -> List[float]:
+    print()
+    print("RTT por saltos")
 
-    actual_rtt = output[ttl]["median"]
-    next_rtt = 0
+    rtt_hops = []
 
-    for next_ttl in range(ttl, TTL_MAX):
-        if "median" not in output[next_ttl]:
+    for ttl in range(1, TTL_MAX):
+        if "median" not in hops_stats[ttl]:
+            rtt_hops.append(-1)
             continue
 
-        next_rtt = output[next_ttl]["median"]
+        actual_rtt = hops_stats[ttl]["median"]
+        next_rtt = 0
 
-        if next_rtt - actual_rtt > 0:
-            break
+        for next_ttl in range(ttl, TTL_MAX):
+            if "median" not in hops_stats[next_ttl]:
+                continue
 
+            next_rtt = hops_stats[next_ttl]["median"]
 
-    rtt_hops.append(next_rtt - actual_rtt)
+            if next_rtt - actual_rtt > 0:
+                break
 
-for step, rtt_hop in enumerate(rtt_hops):
-    print(f'{step+1:2} {rtt_hop:.2f}')
+        rtt_hops.append(next_rtt - actual_rtt)
+
+    for step, rtt_hop in enumerate(rtt_hops):
+        print(f'{step+1:2} {rtt_hop:.2f}')
+
+if __name__ == "__main__":
+    _, stats = traceroute(sys.argv[1])
+    rtt_hops(stats)
