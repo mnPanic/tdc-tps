@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 
+import os
+import ipinfo
+import json
 import statistics
 import sys
 import scapy.all as scp
@@ -10,13 +13,23 @@ from typing import List, Dict, Tuple
 TTL_MAX = 30
 ITERATIONS = 5
 
+def get_ipinfo_at():
+    at = os.getenv("IPINFO_ACCESS_TOKEN")
+    if at is None:
+        raise Exception("No esta seteada la env IPINFO_ACCESS_TOKEN con el access token de ipinfo.io")
+
+ipinfo_access_token = get_ipinfo_at()
+
 def stdev(l: List[float]):
     if len(l) == 1:
         return 0
 
     return statistics.stdev(l)
 
-def traceroute(dst_ip: str) -> Tuple[List[Dict[str, List[float]]], List[Dict[str, dict]]]:
+Hops = List[Dict[str, List[float]]]
+Stats = List[Dict[str, dict]]
+
+def traceroute(dst_ip: str) -> Tuple[Hops, Stats]:
 
     hops = [{} for i in range(TTL_MAX + 1)]
     hops_stats = [{} for i in range(TTL_MAX + 1)]
@@ -54,7 +67,7 @@ def traceroute(dst_ip: str) -> Tuple[List[Dict[str, List[float]]], List[Dict[str
 
     return hops, hops_stats
 
-def rtt_hops(hops_stats: List[Dict[str, dict]]) -> List[float]:
+def rtt_hops(hops_stats: Stats) -> List[float]:
     print()
     print("RTT por saltos")
 
@@ -82,6 +95,61 @@ def rtt_hops(hops_stats: List[Dict[str, dict]]) -> List[float]:
     for step, rtt_hop in enumerate(rtt_hops):
         print(f'{step+1:2} {rtt_hop:.2f}')
 
+def serialize(ip: str, hops: Hops, stats: Stats):
+    with open(f"out/{ip}-hops.json", 'w+') as f:
+        json.dump(hops, f)
+    
+    with open(f"out/{ip}-stats.json", 'w+') as f:
+        json.dump(stats, f)
+
+def deserialize(ip: str) -> Tuple[Hops, Stats]:
+    with open(f"out/{ip}-hops.json", 'r') as f:
+        hops = json.load(f)
+    
+    with open(f"out/{ip}-stats.json", 'r') as f:
+        stats = json.load(f)
+    
+    return hops, stats
+
+def get_ipinfo(ip: str) -> dict:
+    """
+    {
+        "asn": "AS7303", 
+        "city": "Buenos Aires", 
+        "country": "Argentina", 
+        "country_code": "AR", 
+        "hostname": "213-30-137-186.fibertel.com.ar", 
+        "ip": "186.137.30.213", 
+        "latitude": -34.6011, 
+        "longitude": -58.3847, 
+        "organization": "Telecom Argentina S.A."
+    }
+    """
+    handler = ipinfo.getHandler()
+    # info.all devuelve todo como dict
+    return handler.getDetails(ip)
+
+def view_route(stats: Stats):
+    for i, hop in enumerate(stats):
+        if "IP" not in hop:
+            print(f"{i:2} *")
+            continue
+
+        ip = hop["IP"]
+        median = hop["median"]
+
+        info = get_ipinfo(ip)
+        if "bogon" in info.all and info.bogon:
+            print(f"{i:2} {ip:<15} {median:.2f}")
+            continue
+
+        print(f"{i:2} {ip:<15} {median:.2f} ({info.city} - {info.country_name}, {info.org})")
+
 if __name__ == "__main__":
-    _, stats = traceroute(sys.argv[1])
-    rtt_hops(stats)
+    ip = sys.argv[1]
+    #hops, stats = traceroute(ip)
+    #serialize(ip, hops, stats)
+
+    hops, stats = deserialize(ip)
+    #rtt_hops(stats)
+    view_route(stats)
