@@ -1,0 +1,95 @@
+WARNING: No IPv4 address found on p2p0 !
+WARNING: No IPv4 address found on awdl0 !
+WARNING: more No IPv4 address found on en0 !
+ 1 192.168.0.1     		 16.38 ms 	 11.09 ms
+ 2 * * *
+ 3 * * *
+ 4 * * *
+ 5 * * *
+ 6 * * *
+ 7 8.243.138.29    		 31.72 ms 	 6.18 ms
+ 8 4.69.207.33     		 156.74 ms 	 0.45 ms
+ 9 4.68.111.110    		 154.27 ms 	 1.59 ms
+10 * * *
+11 66.3.25.94      		 305.63 ms 	 142.46 ms
+12 128.2.255.193   		 194.06 ms 	 2.46 ms
+13 128.2.255.202   		 193.59 ms 	 1.04 ms
+14 128.2.42.52     		 191.45 ms 	 2.10 ms
+15 128.2.42.52     		 191.09 ms 	 1.22 ms
+16 128.2.42.52     		 190.86 ms 	 8.43 ms
+17 128.2.42.52     		 192.14 ms 	 3.31 ms
+18 128.2.42.52     		 191.50 ms 	 1.50 ms
+19 128.2.42.52     		 194.42 ms 	 5.45 ms
+20 128.2.42.52     		 193.49 ms 	 3.60 ms
+21 128.2.42.52     		 193.35 ms 	 1.82 ms
+22 128.2.42.52     		 191.48 ms 	 4.98 ms
+23 128.2.42.52     		 191.03 ms 	 5.56 ms
+24 128.2.42.52     		 193.42 ms 	 2.13 ms
+25 128.2.42.52     		 190.62 ms 	 0.61 ms
+26 128.2.42.52     		 192.72 ms 	 3.17 ms
+27 128.2.42.52     		 193.77 ms 	 5.29 ms
+28 128.2.42.52     		 196.19 ms 	 4.15 ms
+29 128.2.42.52     		 191.36 ms 	 1.71 ms
+30 128.2.42.52     		 194.76 ms 	 5.68 ms
+
+RTT por saltos
+ 1 15.34
+ 2 -1.00
+ 3 -1.00
+ 4 -1.00
+ 5 -1.00
+ 6 -1.00
+ 7 125.02
+ 8 148.89
+ 9 151.36
+10 -1.00
+11 -114.27
+12 0.36
+13 0.84
+14 0.69
+15 1.05
+16 1.28
+17 2.28
+18 2.93
+19 1.76
+20 0.28
+21 0.07
+22 1.94
+23 2.38
+24 0.35
+25 2.10
+26 1.05
+27 2.42
+28 -4.83
+29 0.00
+ 0 *
+ 1 192.168.0.1     16.38
+ 2 *
+ 3 *
+ 4 *
+ 5 *
+ 6 *
+ 7 8.243.138.29    31.72 (New York City - United States, AS3356 Level 3 Parent, LLC)
+ 8 4.69.207.33     156.74 (Miami - United States, AS3356 Level 3 Parent, LLC)
+ 9 4.68.111.110    154.27 (Monroe - United States, AS3356 Level 3 Parent, LLC)
+10 *
+11 66.3.25.94      305.63 (Canton - United States, AS2828 MCI Communications Services, Inc. d/b/a Verizon Business)
+12 128.2.255.193   194.06 (Pittsburgh - United States, AS9 Carnegie Mellon University)
+13 128.2.255.202   193.59 (Pittsburgh - United States, AS9 Carnegie Mellon University)
+14 128.2.42.52     191.45 (Pittsburgh - United States, AS9 Carnegie Mellon University)
+15 128.2.42.52     191.09 (Pittsburgh - United States, AS9 Carnegie Mellon University)
+16 128.2.42.52     190.86 (Pittsburgh - United States, AS9 Carnegie Mellon University)
+17 128.2.42.52     192.14 (Pittsburgh - United States, AS9 Carnegie Mellon University)
+18 128.2.42.52     191.50 (Pittsburgh - United States, AS9 Carnegie Mellon University)
+19 128.2.42.52     194.42 (Pittsburgh - United States, AS9 Carnegie Mellon University)
+20 128.2.42.52     193.49 (Pittsburgh - United States, AS9 Carnegie Mellon University)
+21 128.2.42.52     193.35 (Pittsburgh - United States, AS9 Carnegie Mellon University)
+22 128.2.42.52     191.48 (Pittsburgh - United States, AS9 Carnegie Mellon University)
+23 128.2.42.52     191.03 (Pittsburgh - United States, AS9 Carnegie Mellon University)
+24 128.2.42.52     193.42 (Pittsburgh - United States, AS9 Carnegie Mellon University)
+25 128.2.42.52     190.62 (Pittsburgh - United States, AS9 Carnegie Mellon University)
+26 128.2.42.52     192.72 (Pittsburgh - United States, AS9 Carnegie Mellon University)
+27 128.2.42.52     193.77 (Pittsburgh - United States, AS9 Carnegie Mellon University)
+28 128.2.42.52     196.19 (Pittsburgh - United States, AS9 Carnegie Mellon University)
+29 128.2.42.52     191.36 (Pittsburgh - United States, AS9 Carnegie Mellon University)
+30 128.2.42.52     194.76 (Pittsburgh - United States, AS9 Carnegie Mellon University)
