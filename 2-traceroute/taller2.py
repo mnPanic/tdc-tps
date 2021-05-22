@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 
-import os
+import click
 import ipinfo
 import json
+import os
+import os.path
 import statistics
 import sys
 import scapy.all as scp
@@ -18,6 +20,7 @@ def get_ipinfo_at():
     if at is None:
         raise Exception("No esta seteada la env IPINFO_ACCESS_TOKEN con el access token de ipinfo.io")
 
+
 ipinfo_access_token = get_ipinfo_at()
 
 def stdev(l: List[float]):
@@ -25,6 +28,7 @@ def stdev(l: List[float]):
         return 0
 
     return statistics.stdev(l)
+
 
 Hops = List[Dict[str, List[float]]]
 Stats = List[Dict[str, dict]]
@@ -95,6 +99,9 @@ def rtt_hops(hops_stats: Stats) -> List[float]:
     for step, rtt_hop in enumerate(rtt_hops):
         print(f'{step+1:2} {rtt_hop:.2f}')
 
+    with open(f"out/{ip}-rtt-hops.json", 'w+') as f:
+        json.dump(rtt_hops, f)
+
 def serialize(ip: str, hops: Hops, stats: Stats):
     with open(f"out/{ip}-hops.json", 'w+') as f:
         json.dump(hops, f)
@@ -145,11 +152,17 @@ def view_route(stats: Stats):
 
         print(f"{i:2} {ip:<15} {median:.2f} ({info.city} - {info.country_name}, {info.org})")
 
+
 if __name__ == "__main__":
     ip = sys.argv[1]
-    #hops, stats = traceroute(ip)
-    #serialize(ip, hops, stats)
+    # activate_hops = sys.argv[2]
+
+    if not os.path.exists(f'out/{ip}-hops.json'):
+        hops, stats = traceroute(ip)
+        serialize(ip, hops, stats)
 
     hops, stats = deserialize(ip)
-    #rtt_hops(stats)
+    # if activate_hops:
+    rtt_hops(stats)
+
     view_route(stats)
