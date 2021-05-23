@@ -47,9 +47,34 @@ y/o tablas que muestren de manera integral los resultados observados. A modo de 
 mostrar un gráfico de RTT entre saltos que se deduce de restar los valores promediados a cada salto y/o
 RTT total a cada salto. -->
 
-- [Carnegie Mellon (_Carne y Melón_) University - Estados Unidos](https://www.cmu.edu/) (`128.2.42.52`) (Luciano)
+A continuación se exponen los resultados de la ejecución del programa implementado para la distintas universidades nombradas en la sección anterior. Para cada una, se muestra una tabla cuya columna "Interoceánico" es la predicción hecha solamente según el dRTT y los RTTs del camino, que se puede contrastar con la información geográfica (columna Location) obtenida a partir de `ipinfo`.
 
-- `14.139.45.149` (http://www.du.ac.in/, Delhi University, India) (Manuel)
+### Carnegie Mellon
+
+[Carnegie Mellon (_Carne y Melón_) University - Estados Unidos](https://www.cmu.edu/) (`128.2.42.52`) (Luciano)
+
+|  Hop  |      IP       |    RTT    |    SD     |  dRTT   | Interoceánico |                           Location                           |
+| :---: | :-----------: | :-------: | :-------: | :-----: | :-----------: | :----------------------------------------------------------: |
+|   1   |  192.168.0.1  | 16.38 ms  | 11.09 ms  |  15.34  |       -       |                              -                               |
+|   2   |     * * *     |     -     |     -     |    -    |       -       |                              -                               |
+|   3   |     * * *     |     -     |     -     |    -    |       -       |                              -                               |
+|   4   |     * * *     |     -     |     -     |    -    |       -       |                              -                               |
+|   5   |     * * *     |     -     |     -     |    -    |       -       |                              -                               |
+|   6   |     * * *     |     -     |     -     |    -    |       -       |                              -                               |
+|   7   | 8.243.138.29  | 31.72 ms  |  6.18 ms  | 125.02  |      Si       | (New York City - United States, AS3356 Level 3 Parent, LLC)  |
+|   8   |  4.69.207.33  | 156.74 ms |  0.45 ms  | 148.89  |      No       |     (Miami - United States, AS3356 Level 3 Parent, LLC)      |
+|   9   | 4.68.111.110  | 154.27 ms |  1.59 ms  | 151.36  |      No       |     (Monroe - United States, AS3356 Level 3 Parent, LLC)     |
+|  10   |     * * *     |     -     |     -     |    -    |       -       |                              -                               |
+|  11   |  66.3.25.94   | 305.63 ms | 142.46 ms | -114.27 |      No       | (Canton - United States, AS2828 MCI Communications Services) |
+|  12   | 128.2.255.193 | 194.06 ms |  2.46 ms  |  0.36   |      No       | (Pittsburgh - United States, AS9 Carnegie Mellon University) |
+|  13   | 128.2.255.202 | 193.59 ms |  1.04 ms  |  0.84   |      No       | (Pittsburgh - United States, AS9 Carnegie Mellon University) |
+|  14   |  128.2.42.52  | 191.45 ms |  2.10 ms  |  0.69   |      No       | (Pittsburgh - United States, AS9 Carnegie Mellon University) |
+
+![](img/rtts-cmu.svg)
+
+### Delhi University
+
+`14.139.45.149` (http://www.du.ac.in/, Delhi University, India) (Manuel)
 
 |  Hop  |       IP        |    RTT    |    SD    |  dRTT  | Interoceánico |                             Location                              |
 | :---: | :-------------: | :-------: | :------: | :----: | :-----------: | :---------------------------------------------------------------: |
@@ -73,18 +98,12 @@ RTT total a cada salto. -->
 |  18   |      * * *      |     -     |    -     | -1.00  |       -       |                                 -                                 |
 |  19   |      * * *      |     -     |    -     | -1.00  |       -       |                                 -                                 |
 |  20   |      * * *      |     -     |    -     | -1.00  |       -       |                                 -                                 |
-|  21   |      * * *      |     -     |    -     | -1.00  |       -       |                                 -                                 |
-|  22   |      * * *      |     -     |    -     | -1.00  |       -       |                                 -                                 |
-|  23   |      * * *      |     -     |    -     | -1.00  |       -       |                                 -                                 |
-|  24   |      * * *      |     -     |    -     | -1.00  |       -       |                                 -                                 |
-|  25   |      * * *      |     -     |    -     | -1.00  |       -       |                                 -                                 |
-|  26   |      * * *      |     -     |    -     | -1.00  |       -       |                                 -                                 |
-|  27   |      * * *      |     -     |    -     | -1.00  |       -       |                                 -                                 |
-|  28   |      * * *      |     -     |    -     | -1.00  |       -       |                                 -                                 |
-|  29   |      * * *      |     -     |    -     | -1.00  |       -       |                                 -                                 |
-|  30   |      * * *      |     -     |    -     |   -1   |       -       |                                 -                                 |
 
-- `133.1.138.1` (https://www.osaka-u.ac.jp/ - Universidad de Osaka, Japón) (Elias)
+![](img/rtts-delhi.svg)
+
+### Osaka University
+
+`133.1.138.1` (https://www.osaka-u.ac.jp/ - Osaka University, Japón) (Elias)
 
 |  Hop  |       IP       |    RTT    |    SD    |   dRTT    | Interoceánico |                                 Location                                 |
 | :---: | :------------: | :-------: | :------: | :-------: | :-----------: | :----------------------------------------------------------------------: |
@@ -119,25 +138,36 @@ RTT total a cada salto. -->
 |  29   |     * * *      |    N/A    |   N/A    |    N/A    |      N/A      |                                                                          |
 |  30   |     * * *      |    N/A    |   N/A    |    N/A    |      N/A      |                                                                          |
 
+![](img/rtts-osaka.svg)
+
 **NOTA:** Para el caso del hop 7 notamos un incremento local y anómalo en el RTT. Creemos que esto puede deberse a que  
 el host puede asignar distintos grados de prioridad a los diferentes protocolos de mensajería. Esto resultaría en que la respuesta de ICMP se aplace en el tiempo.
 
-- ¿Qué porcentaje de saltos no responden los Time exceeded? ¿Cuál es el largo de la ruta en terminos de
-los saltos que si responden?
+- **¿Qué porcentaje de saltos no responden los Time exceeded? ¿Cuál es el largo de la ruta en terminos de los saltos que si responden?**
 
-  
-    
-- ¿La ruta tiene enlaces intercontinentales? ¿Cuántos?
+  Aproximadamente el 27% no responde y el largo es 21 hops.
 
-  
+- **¿La ruta tiene enlaces intercontinentales? ¿Cuántos?**
 
-- ¿Se observaron comportamientos anómalos del tipo descripto en la bibliografía sugerida?
+  Si, 2. Se predijeron 3, pero el hop 13-14 tenía un RTT alto por ser de una punta a otra de Estados Unidos.
 
-  
+- **¿Se observaron comportamientos anómalos del tipo descripto en la bibliografía sugerida?**
 
-- ¿Se observaron otros comportamientos anómalos? Proponga hipótesis que permitan explicarlos.
+  Si,
 
-  
+  - Missing hops
+  - Missing destination
+  - False RTTs
+  - False Links
+
+    Del hop 7 (San Pablo) al 10 (San Pablo) pasa por Madrid. Se observa el camino Argentina -> San Pablo -> Madrid -> San Pablo -> USA, cuando en realidad se cree que se trata de dos caminos mezclados,
+
+    1. Argentina -> San Pablo -> USA
+    2. Argenitna -> San Pablo -> Madrid -> USA
+
+- **¿Se observaron otros comportamientos anómalos? Proponga hipótesis que permitan explicarlos.**
+
+  No se observa ningún comportamiento anómalo que no sea nombrado en la bibliografía sugerida.
 
 ## Conclusiones
 
