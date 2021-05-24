@@ -19,7 +19,8 @@ def get_ipinfo_at():
     at = os.getenv("IPINFO_ACCESS_TOKEN")
     if at is None:
         raise Exception("No esta seteada la env IPINFO_ACCESS_TOKEN con el access token de ipinfo.io")
-
+    
+    return at
 
 ipinfo_access_token = get_ipinfo_at()
 
@@ -72,9 +73,6 @@ def traceroute(dst_ip: str) -> Tuple[Hops, Stats]:
     return hops, hops_stats
 
 def d_rtt(hops_stats: Stats):
-    print()
-    print("RTT por saltos")
-
     for ttl in range(1, TTL_MAX):
         if "median" not in hops_stats[ttl]:
             continue
@@ -82,7 +80,7 @@ def d_rtt(hops_stats: Stats):
         actual_rtt = hops_stats[ttl]["median"]
         next_rtt = -1
 
-        for next_ttl in range(ttl, TTL_MAX):
+        for next_ttl in range(ttl+1, TTL_MAX+1):
             if "median" not in hops_stats[next_ttl]:
                 continue
 
@@ -91,14 +89,16 @@ def d_rtt(hops_stats: Stats):
             if next_rtt - actual_rtt > 0:
                 break
 
-        if next_rtt == -1:
+        if next_rtt - actual_rtt < 0:
             continue
 
         hops_stats[ttl]["d_rtt"] = next_rtt - actual_rtt
 
 def view_d_rtt(stats: Stats):
-    for step, rtt_hop in enumerate(hops_stats):
-        print(f"{step+1:2} {hops_stats[step]['d_rtt']:.2f}")
+    print()
+    print("RTT por saltos")
+    for step, rtt_hop in enumerate(stats):
+        print(f"{step+1:2} {stats[step]['d_rtt']:.2f}")
 
 def serialize(ip: str, hops: Hops, stats: Stats):
     with open(f"out/{ip}-hops.json", 'w+') as f:
@@ -130,23 +130,37 @@ def get_ipinfo(ip: str) -> dict:
         "organization": "Telecom Argentina S.A."
     }
     """
-    handler = ipinfo.getHandler()
-    # info.all devuelve todo como dict
-    return handler.getDetails(ip)
+    if not os.path.exists(f'ipinfo-cache/{ip}.json'):
+        handler = ipinfo.getHandler(access_token=ipinfo_access_token)
+        # info.all devuelve todo como dict
+        info = handler.getDetails(ip).all
+        with open(f'ipinfo-cache/{ip}.json', 'w+') as f:
+            json.dump(info, f)
+
+    else:
+        with open(f'ipinfo-cache/{ip}.json', 'r') as f:
+            info = json.load(f)
+
+    return info
 
 def extend_with_geo(stats: Stats):
+    # hack muy lindo para que se grafique con hue=country_name la primera IP en sns
+    stats[1]["country_name"] = "Argentina"
+    stats[1]["city"] = "Buenos Aires"
+
     for i, hop in enumerate(stats):
         if "IP" not in hop:
             continue
 
         info = get_ipinfo(hop["IP"])
-        if "bogon" in info.all and info.bogon:
+        if "bogon" in info and info["bogon"]:
+            hop["country_name"] = "Private"
+            hop["city"] = "Private"
             continue
         
-        
-        hop["city"] = info.city
-        hop["country_name"] = info.country_name
-        hop["org"] = info.org
+        hop["city"] = info["city"]
+        hop["country_name"] = info["country_name"]
+        hop["org"] = info["org"]
 
 def view_route(stats: Stats):
     for i, hop in enumerate(stats):
