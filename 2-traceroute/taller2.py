@@ -147,6 +147,8 @@ def extend_with_geo(stats: Stats):
     # hack muy lindo para que se grafique con hue=country_name la primera IP en sns
     stats[1]["country_name"] = "Argentina"
     stats[1]["city"] = "Buenos Aires"
+    stats[1]["lat"] = "-34.6131"
+    stats[1]["long"] = "-58.3772"
 
     for i, hop in enumerate(stats):
         if "IP" not in hop:
@@ -156,11 +158,14 @@ def extend_with_geo(stats: Stats):
         if "bogon" in info and info["bogon"]:
             hop["country_name"] = "Private"
             hop["city"] = "Private"
+            hop["org"] = "Private"
             continue
         
         hop["city"] = info["city"]
         hop["country_name"] = info["country_name"]
         hop["org"] = info["org"]
+        hop["lat"] = info["latitude"]
+        hop["long"] = info["longitude"]
 
 def view_route(stats: Stats):
     for i, hop in enumerate(stats):
