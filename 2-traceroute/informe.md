@@ -1,18 +1,18 @@
+<!-- omit in toc -->
 # Taller 2 - Traceroute
 
 ## Contenidos
 
-- [Taller 2 - Traceroute](#taller-2---traceroute)
-  - [Contenidos](#contenidos)
-  - [Integrantes](#integrantes)
-  - [Introducción](#introducción)
-  - [Métodos y condiciones de los experimentos](#métodos-y-condiciones-de-los-experimentos)
-  - [Resultados de los experimentos](#resultados-de-los-experimentos)
-    - [Carnegie Mellon University (CMU)](#carnegie-mellon-university-cmu)
-    - [Delhi University](#delhi-university)
-    - [Osaka University](#osaka-university)
-    - [Predicción automática de saltos intercontinentales](#predicción-automática-de-saltos-intercontinentales)
-  - [Conclusiones](#conclusiones)
+- [Contenidos](#contenidos)
+- [Integrantes](#integrantes)
+- [Introducción](#introducción)
+- [Métodos y condiciones de los experimentos](#métodos-y-condiciones-de-los-experimentos)
+- [Resultados de los experimentos](#resultados-de-los-experimentos)
+  - [Carnegie Mellon University (CMU)](#carnegie-mellon-university-cmu)
+  - [Delhi University](#delhi-university)
+  - [Osaka University](#osaka-university)
+  - [Predicción automática de saltos intercontinentales](#predicción-automática-de-saltos-intercontinentales)
+- [Conclusiones](#conclusiones)
 
 ## Integrantes
 
@@ -27,31 +27,26 @@
 <!-- 200 palabras -->
 <!-- Breve explicación de los experimentos que se van a realizar. -->
 
-Traceroute es una de las herramientas para diagnóstico de red más utilizadas dada su simplicidad y amplia gama de aplicaciones. En este trabajo, se realiza una implementación alternativa en python utilizando la biblioteca [`scapy`](https://scapy.net/) para la interacción con la red.
+*Traceroute* es una de las herramientas para diagnóstico de red más utilizadas dada su simplicidad y amplia gama de aplicaciones. En este trabajo, se realiza una implementación alternativa en `python` utilizando la biblioteca [`scapy`](https://scapy.net/) para interactuar con la red. El programa desarrollado envía paquetes ICMP `echo request` incrementando el _TTL_ hasta llegar a destino. De esta manera, se puede obtener la dirección IP de los *routers* que componen la ruta y el RTT hacia cada uno de ellos, a través de los paquetes `TTL time exceeded` enviados por cada *host* que reciba un paquete con TTL nulo ($TTL=0$). Este mecanismo es suceptible a muchas anomalías que se desarrollan a lo largo del informe.
 
-La implementacion se basa en enviar paquetes ICMP echo incrementando el ttl hasta llegar al destino, lo cual permite mediante los paquetes de error ICMP por ttl excedido obtener los routers que componen la ruta y el RTT hacia cada uno de ellos. Esto es suceptible a muchas anomalias que se exploran en el informe
-
-Se prueba pegándole a diferentes universidades alrededor del mundo, y se realiza una predicción manual de qué saltos son interocéanicos basado en el RTT y el RTT entre saltos (dRTT).
-
-Finalmente, se sofistica la predicción usando el método de deteccion de outliers propuesto por [Cimbala](https://www.me.psu.edu/cimbala/me345/Lectures/Outliers.pdf).
+El objetivo del trabajo es identificar los saltos interoceánicos a lo largo de la ruta a partir de los valores de RTT entre saltos (`dRTT`). Para esto, se realizan tres pruebas dirigidas a diferentes universidades alrededor del mundo. Primero, se realiza una predicción manual para determinar qué saltos son interocéanicos basado en el RTT y el RTT entre saltos (dRTT) y, finalmente, se implementa una técnica que permite realizar la predicción de forma automática basada en el método de deteccion de outliers propuesto por [Cimbala](https://www.me.psu.edu/cimbala/me345/Lectures/Outliers.pdf).
 
 ## Métodos y condiciones de los experimentos
 
 <!-- 400 palabras -->
-<!-- Explicación del código implementado y descripciones de las rutas. Se debe detallar la localización geográfica de cada universidad y
-las características de las pruebas -horario, día de la semana, etc.- -->
+<!-- Explicación del código implementado y descripciones de las rutas. Se debe detallar la localización geográfica de cada universidad y las características de las pruebas -horario, día de la semana, etc.- -->
 
-Se realizó una implementación alternativa de traceroute en Python 3 con la biblioteca `scapy`. Se envían paquetes `ICMP` sobre `IP` al sitio web de cada universidad, incrementando el TTL para ir de hop en hop. Para cada TTL se realizan 5 iteraciones. Para calcular el RTT hacia cada IP, solo se considera aquella que presentó una mayor cantidad de respuestas. Se calcula la mediana y el desvío estándar. Para la predicción automática de saltos interoceánicos, se implementó el método de [Cimbala](https://www.me.psu.edu/cimbala/me345/Lectures/Outliers.pdf) para una muestra de variable única (`dRTT`).
+Se realizó una implementación alternativa de *traceroute* en `Python 3` con la biblioteca `scapy`. Se envían paquetes `ICMP` sobre `IP` al sitio web de cada universidad, incrementando el TTL para ir avanzando gradualmente en cada *hop* que compone la ruta. Para cada `TTL` se realizan 5 iteraciones. Para calcular el `RTT` de cada *hop*, sólo se considera aquel *host* que presenta una mayor cantidad de respuestas. En cada caso, se calcula la mediana y el desvío estándar. A su vez, para calcular los valores de `dRTT` (`RTT` entre saltos), se realiza la diferencia entre los valores de `RTT` de dos *hops* consecutivos. En caso de obtener un valor negativo o que el salto no presente valor de `RTT`, se realiza con el siguiente *hop*, de no encontrarse ninguno, se ignora.
 
-Luego, para validar la predicción de saltos interoceánicos, se consume el servicio [`ipinfo`](https://ipinfo.io/) y se amplían los resultados con información geográfica y organizacional.
+Para la predicción automática de saltos interoceánicos, se implementó el método de [Cimbala](https://www.me.psu.edu/cimbala/me345/Lectures/Outliers.pdf) para una muestra de variable única (`dRTT`).
 
-Las universidades estudiadas son:
+Luego, para validar la predicción de saltos interoceánicos, se consume el servicio [`ipinfo`](https://ipinfo.io/) y se amplían los resultados con información geográfica y organizacional de cada *host*.
+
+A continuación se presentan las universidades estudiadas. Las pruebas fueron ejecutadas a las 20:00 horas del Sábado 22/05/2021.
 
 - [Carnegie Mellon (_Carne y Melón_) University - Estados Unidos](https://www.cmu.edu/)
 - [Delhi University - India](http://www.du.ac.in/)
 - [Osaka University - Japón](https://www.osaka-u.ac.jp/)
-
-Y las pruebas fueron ejecutadas a las 20:00 del 22/05/2021.
 
 ## Resultados de los experimentos
 
@@ -61,7 +56,9 @@ y/o tablas que muestren de manera integral los resultados observados. A modo de 
 mostrar un gráfico de RTT entre saltos que se deduce de restar los valores promediados a cada salto y/o
 RTT total a cada salto. -->
 
-A continuación se exponen los resultados de la ejecución del programa implementado para la distintas universidades nombradas en la sección anterior. Para cada una, se muestra una tabla cuya columna "Interoceánico" es la predicción hecha solamente según el dRTT y los RTTs del camino, que se puede contrastar con la información geográfica (columna Location) obtenida a partir de `ipinfo`. Se expone un gráfico con el RTT incremental para cada hop y el dRTT junto con el umbral considerado para saltos interoceánicos como una línea punteada. Además, se traza la ruta obtenida sobre un mapa.
+A continuación se exponen los resultados de la ejecución del programa implementado para la distintas universidades nombradas en la sección anterior. Para cada una, se muestra una tabla cuya columna `Interoceánico` es la predicción hecha solamente según el `dRTT` y los `RTTs` del camino. Cada predicción puede validarse con la información geográfica (columna `Location`) obtenida a partir de `ipinfo`. Se expone un gráfico con el `RTT` incremental para cada *hop* y el `dRTT` junto con el umbral considerado para saltos interoceánicos representado con una línea punteada. Además, se traza la ruta obtenida sobre un mapa.
+
+En todos los casos, se realizó el experimento con $TTL=30$, pero sólo se expone un subconjunto de los datos para evitar repetición.
 
 ### Carnegie Mellon University (CMU)
 
@@ -83,35 +80,35 @@ A continuación se exponen los resultados de la ejecución del programa implemen
 |  12   | 128.2.255.193 | 194.06 ms |  2.46 ms  |  0.36  |      No       | Pittsburgh - United States, AS9 Carnegie Mellon University |
 |  13   | 128.2.255.202 | 193.59 ms |  1.04 ms  |  0.84  |      No       | Pittsburgh - United States, AS9 Carnegie Mellon University |
 |  14   |  128.2.42.52  | 191.45 ms |  2.10 ms  |  0.69  |      No       | Pittsburgh - United States, AS9 Carnegie Mellon University |
-
-RTTs:
+<!-- omit in toc -->
+#### RTTs
 
 ![](img/rtts-cmu.svg)
-
-Ruta:
+<!-- omit in toc -->
+#### Ruta obtenida
 
 ![](img/geo-cmu.png)
+<!-- omit in toc -->
+#### Preguntas
 
-- **¿Qué porcentaje de saltos no responden los Time exceeded? ¿Cuál es el largo de la ruta en terminos de los saltos que si responden?**
+- **¿Qué porcentaje de saltos no responden los Time exceeded? ¿Cuál es el largo de la ruta en terminos de los saltos que sí responden?**
 
-  Aproximadamente el 43% no responde y el largo es 8 hops.
+  Aproximadamente el 43% no responde y el largo es de 8 *hops*.
 
 - **¿La ruta tiene enlaces intercontinentales? ¿Cuántos?**
 
-  Seguro tiene un enlace intercontinental porque va a Estados Unidos, pero no aparece en el traceroute. El salto predicho es incorrecto, ya que en el hop 7 el paquete ya se encontraba en el otro continente.
+  Seguro tiene un enlace intercontinental porque el paquete viaja de Buenos Aires a Estados Unidos, pero no aparece en el `traceroute`. El salto predicho es incorrecto, ya que en el *hop* 7 el paquete ya se encontraba en el otro continente.
 
 - **¿Se observaron comportamientos anómalos del tipo descripto en la bibliografía sugerida?**
 
-  Si,
+  Sí, se observaron:
 
-  - Missing hops
-  - False RTTs: Se observa que el hop 11 presenta un RTT más alto de lo esperado dada la región geográfica.
+  - *Missing hops*, ya que no se observan los *hops* 2 a 6 y 10.
+  - *False RTTs*. Se observa que el *hop* 11 presenta un `RTT` más alto de lo esperado dada la región geográfica en que se encuentra. Posibles hipótesis para explicar este comportamiento:
 
-    Posibles hipótesis para explicarlo son:
-
-    - La ruta hacia ese router es asimétrica. Como menciona la bibliografía sugerida, podría suceder que vuelva por una ruta distinta, potencialmente más larga o congestionada.
-    - El router presenta distintos grados de prioridad para cada tarea, por lo que el envío de los mensajes *Time exceeded* es aplazado en el tiempo.
-    - El router se vio momentáneamente congestionado al momento de la prueba. Se cree que es la más probable, ya que se realizó la prueba en otro momento y presentó menos demora.
+    - La ruta hacia ese *router* es asimétrica. Como menciona la bibliografía sugerida, podría suceder que vuelva por una ruta distinta, potencialmente más larga o congestionada.
+    - El *router* presenta distintos grados de prioridad para cada tarea, por lo que el envío de los mensajes *Time exceeded* es aplazado en el tiempo.
+    - El *router* se vio momentáneamente congestionado al momento de la prueba. Se cree que es la más probable, ya que se realizó la prueba en otro momento y presentó menor demora.
 
 - **¿Se observaron otros comportamientos anómalos? Proponga hipótesis que permitan explicarlos.**
 
@@ -143,14 +140,16 @@ Ruta:
 |  18   |      * * *      |     -     |    -     |   -    |       -       |                                -                                |
 |  19   |      * * *      |     -     |    -     |   -    |       -       |                                -                                |
 |  20   |      * * *      |     -     |    -     |   -    |       -       |                                -                                |
-
-RTTs:
+<!-- omit in toc -->
+#### RTTs
 
 ![](img/rtts-delhi.svg)
-
-Ruta:
+<!-- omit in toc -->
+#### Ruta
 
 ![](img/geo-delhi.png)
+<!-- omit in toc -->
+#### Preguntas
 
 - **¿Qué porcentaje de saltos no responden los Time exceeded? ¿Cuál es el largo de la ruta en terminos de los saltos que si responden?**
 
@@ -164,11 +163,9 @@ Ruta:
 
   Si,
 
-  - Missing hops
-  - Missing destination
-  - False Links
-
-    El tramo 5 - 9 induce a pensar que existe una ruta BA -> NYC -> BA -> UK. Se cree que en realidad se trata de dos rutas mezcladas,
+  - *Missing hops*, ya que no se obervan los *hops* 2, 6, 12, 13 y a partir del 15.
+  - *Missing destination*. Se cree que a partir del *hop* 15 la respuesta faltante corresponde al destino.
+  - *False links*. El tramo de los *hops* 5 a 9 induce a pensar que existe una ruta BA -> NYC -> BA -> UK. Se cree que en realidad se trata de dos rutas mezcladas, lo que puede apreciarse mejor en el gráfico de la ruta.
 
     1. BA -> NYC -> UK
     2. BA -> BA -> UK
@@ -213,14 +210,16 @@ Ruta:
 |  28   |     * * *      |    N/A    |   N/A    |    N/A    |      N/A      |                                                                        |
 |  29   |     * * *      |    N/A    |   N/A    |    N/A    |      N/A      |                                                                        |
 |  30   |     * * *      |    N/A    |   N/A    |    N/A    |      N/A      |                                                                        |
-
-RTTs:
+<!-- omit in toc -->
+#### RTTs
 
 ![](img/rtts-osaka.svg)
-
-Ruta:
+<!-- omit in toc -->
+#### Ruta
 
 ![](img/geo-osaka.png)
+<!-- omit in toc -->
+#### Preguntas
 
 - **¿Qué porcentaje de saltos no responden los Time exceeded? ¿Cuál es el largo de la ruta en terminos de los saltos que si responden?**
 
@@ -234,11 +233,9 @@ Ruta:
 
   Si,
 
-  - Missing hops
-  - Missing destination
-  - False Links
-
-    Del hop 7 (San Pablo) al 10 (San Pablo) pasa por Madrid. Se observa el camino Argentina -> San Pablo -> Madrid -> San Pablo -> USA, cuando en realidad se cree que se trata de dos caminos mezclados,
+  - *Missing hops*, ya que no se observan los *hops* 2 y a partir del 23.
+  - *Missing destination*. Se cree que a partir del *hop* 23 se trata de la respuesta faltante del destino.
+  - *False links*. Del *hop* 7 (San Pablo) al 10 (San Pablo) pasa en medio por Madrid. Se observa el camino Argentina -> San Pablo -> Madrid -> San Pablo -> USA, cuando en realidad se cree que se trata de dos caminos mezclados, lo que puede apreciarse mejor en el gráfico de la ruta.
 
     1. Argentina -> San Pablo -> USA
     2. Argenitna -> San Pablo -> Madrid -> USA
@@ -249,16 +246,17 @@ Ruta:
 
 ### Predicción automática de saltos intercontinentales
 
-A continuación se presenta un gráfico que ilustra los *errores* ($X_i - \bar{X}/S$) para cada salto en la ruta con respecto a la distribucion de dRTTs. En línea punteada la *tau* de Thomson que corresponde a la primera iteración.
+A continuación se presenta un gráfico que ilustra los *errores* ($X_i - \bar{X}/S$) para cada salto en la ruta con respecto a la distribucion de `dRTTs`. Se representa en línea punteada la *tau* de Thomson que corresponde a la primera iteración. El gráfico permite observar cuál es el primer *hop* correspondiente a un salto intercontinental y desarrollar una intuición sobre cuáles son los siguientes.
 
 ![](img/cimbala-init-errors.svg)
 
 - **¿La distribución de RTT entre saltos presenta outliers según el método de Cimbala? ¿Cuántos?**
 
-  Se obtuvo el siguiente output al ejecutar el método de Cimbala para la detección automática de saltos intercontinentales.
+  Se obtuvo el siguiente output al realizar el método de Cimbala para la detección automática de saltos intercontinentales.
 
   ```text
   [14.139.45.149 (Delhi)] El hop #8 con ip 195.22.220.56 (Buenos Aires - Argentina) es un outlier (delta=98.55)
+
   [133.1.138.1 (Osaka)] El hop #6 con ip 10.192.18.12 (Private - Private) es un outlier (delta=124.34)
   [133.1.138.1 (Osaka)] El hop #9 con ip 176.52.249.39 (Madrid - Spain) es un outlier (delta=89.50)
   [133.1.138.1 (Osaka)] El hop #14 con ip 129.250.6.237 (San Jose - United States) es un outlier (delta=81.82)
@@ -269,27 +267,27 @@ A continuación se presenta un gráfico que ilustra los *errores* ($X_i - \bar{X
   [133.1.138.1 (Osaka)] El hop #10 con ip 94.142.98.123 (São Paulo - Brazil) es un outlier (delta=12.30)
   ```
 
-  Se observa que CMU no presenta outliers pero Osaka y Delhi si.
+  Se observa que CMU no presenta *outliers*, pero Osaka y Delhi sí (8 y 1 respectivamente).
 
 - **¿Se corresponden los outliers con los enlaces intercontinentales? ¿Cuántos falsos positivos y falsos negativos hay?**
 
-  - Delhi
+  - *Delhi University*
     - Se corresponden con un solo salto intercontinental.
-    - No hay falsos positivos, pero hay 2 falsos negativos (hops 5 y 10).
-  - Osaka
-    - El 6 y el 9 si, pero solo uno puede ser correcto por los false links explicados anteriormente. 14 y 11 también son correctos
-    - El resto son falsos positivos y no hay falsos negativos.
-  - CMU
-    - No se detectó ninguno.
-    - No hubo falsos positivos y hubo 1 falso negativo (el hop 1).
+    - No hay falsos positivos, pero hay 2 falsos negativos (*hops* 5 y 10).
+  - *Osaka University*
+    - Los saltos de los *hops* 6 y el 9 se corresponden con enlaces intercontinentales, pero solo uno puede ser correcto por los *false links* explicados anteriormente. Los saltos de los *hops* 14 y 11 también son correctos.
+    - El resto corresponde a falsos positivos. No hay falsos negativos.
+  - *Carnegie Mellon University*
+    - No se detectó enlace interncontinental.
+    - No hubieron falsos positivos y hubo 1 falso negativo (el *hop* 1).
 
 - **¿Se aprecia alguna diferencia en la capacidad de detectar enlaces intercontinentales según el largo de la ruta?**
 
-  Si, se percibió a partir de lo experimentado que para rutas cortas el método funciona peor. Esto puede deberse a que en ellas, el desvío estándar se ve fuertemente afectado por las anomalías. Por ejemplo, para CMU el hop 8 se vio afectado por false RTT, lo cuál se cree que terminó causando que no se detecte ningún salto como intercontinental.
+  Sí, se percibió a partir de lo experimentado que para rutas cortas el método funciona peor. Esto puede deberse a que en ellas, el desvío estándar y la media se ven fuertemente afectadas por las anomalías. Por ejemplo, para CMU el *hop* 8 se vio afectado por *false RTT*, lo cual se cree que terminó causando que no se detectara ningún salto intercontinental.
 
 - **¿Es posible mejorar las predicciones usando un valor de corte fijo para el valor $X_i - \bar{X}/S$ en lugar del valor en la tabla $\tau$?**
 
-  No. Los valores de $\tau$ varían muy poco según el $n$, lo que realmente termina afectando la efectividad del método es el desvío estándar. Se conjetura que una forma de mejorar las predicciones sería mantener el valor de $S$ en vez de recalcularlo en cada iteración. De esta forma, el método no se vería afectado por la reducción del tamaño de la muestra.
+  Se cree que no. Los valores de $\tau$ varían muy poco según el $n$, lo que realmente termina afectando la efectividad del método es el desvío estándar. Se conjetura que una forma de mejorar las predicciones sería mantener el valor de $S$ en vez de recalcularlo en cada iteración. De esta forma, el método no se vería afectado por la reducción del tamaño de la muestra.
 
 ## Conclusiones
 
@@ -297,6 +295,8 @@ A continuación se presenta un gráfico que ilustra los *errores* ($X_i - \bar{X
 <!-- Breve reseña que sintetize las principales dificultades y des-
 cubrimientos. -->
 
-Si bien traceroute es una herramienta simple y puede ser muy efectiva, no es la más precisa para identificar saltos intercontinentales dada la gran variedad de anomalías por las que puede ser afectado. Para entender mejor la topología de la red y descartar mejor anomalías de false links, hubiera sido útil graficar en un mapa *todos* los hosts por los que pasan los *echo request*, y no solo los predominantes.
+Si bien traceroute es una herramienta simple y puede ser muy efectiva, no es la más precisa para identificar saltos intercontinentales dada la gran variedad de anomalías por las que puede ser afectado. Para entender mejor la topología de la red y descartar mejor anomalías de *false links*, hubiera sido útil graficar en un mapa **todos** los hosts por los que pasan los *echo request*, y no solo los predominantes.
 
-El método de Cimbala es un buen primer acercamiento a automatizar la detección, pero es muy sensible a las anomalías comunes de traceroute en rutas cortas. Sería interesante testear el método sin variar el desvío estándar en cada iteración.
+El método de Cimbala es un buen primer acercamiento para la automatización de la detección, sin embargo es muy sensible a las anomalías comunes de traceroute en rutas cortas. Sería interesante testear el método sin variar el desvío estándar en cada iteración para corroborar la hipótesis planteada anteriormente.
+
+Además, se plantea como trabajo a futuro agregar heurísticas al cálculo de `dRTTs` que permitan disminuir el impacto de las anomalías más comunes. Por ejemplo, agregar un umbral de error para los casos en que el cálculo de `dRTT` presente un valor negativo para utilizar el valor absoluto y no continuar iterando sobre el siguiente *hop*. Esto permitiría reducir el número de `dRTTs` elevados producto de la presencia de *false RTTs*.
