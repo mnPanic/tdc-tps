@@ -24,3 +24,10 @@ Consideraciones:
   requests. El programa lo toma de la variable de entorno `IPINFO_ACCESS_TOKEN`,
   y si quieren correrlo de 0 pueden usar el que usamos nosotros, que les pasamos
   por mail.
+
+## Estructura
+
+- En la carpeta `out` se disponen las salidas de cada corrida.
+- En `img` se encuentran las imágenes generadas en los *jupyter notebooks*.
+- En `graficos.ipynb` se encuentra el análisis de los resultados.
+- Finalmente, en `cimbala.pynb` y `thomson.py` se encuentra el código adicional para la realización del apartado opcional.
