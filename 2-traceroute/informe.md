@@ -81,15 +81,15 @@ En todos los casos, se realizó el experimento con $TTL=30$, pero sólo se expon
 |  13   | 128.2.255.202 | 193.59 ms |  1.04 ms  |  0.84  |      No       | Pittsburgh - United States, AS9 Carnegie Mellon University |
 |  14   |  128.2.42.52  | 191.45 ms |  2.10 ms  |  0.69  |      No       | Pittsburgh - United States, AS9 Carnegie Mellon University |
 <!-- omit in toc -->
-#### RTTs
+**RTTs**
 
 ![](img/rtts-cmu.svg)
 <!-- omit in toc -->
-#### Ruta obtenida
+**Ruta obtenida**
 
 ![](img/geo-cmu.png)
 <!-- omit in toc -->
-#### Preguntas
+**Preguntas**
 
 - **¿Qué porcentaje de saltos no responden los Time exceeded? ¿Cuál es el largo de la ruta en terminos de los saltos que sí responden?**
 
@@ -141,15 +141,15 @@ En todos los casos, se realizó el experimento con $TTL=30$, pero sólo se expon
 |  19   |      * * *      |     -     |    -     |   -    |       -       |                                -                                |
 |  20   |      * * *      |     -     |    -     |   -    |       -       |                                -                                |
 <!-- omit in toc -->
-#### RTTs
+**RTTs**
 
 ![](img/rtts-delhi.svg)
 <!-- omit in toc -->
-#### Ruta
+**Ruta**
 
 ![](img/geo-delhi.png)
 <!-- omit in toc -->
-#### Preguntas
+**Preguntas**
 
 - **¿Qué porcentaje de saltos no responden los Time exceeded? ¿Cuál es el largo de la ruta en terminos de los saltos que si responden?**
 
@@ -211,15 +211,15 @@ En todos los casos, se realizó el experimento con $TTL=30$, pero sólo se expon
 |  29   |     * * *      |    N/A    |   N/A    |    N/A    |      N/A      |                                                                        |
 |  30   |     * * *      |    N/A    |   N/A    |    N/A    |      N/A      |                                                                        |
 <!-- omit in toc -->
-#### RTTs
+**RTTs**
 
 ![](img/rtts-osaka.svg)
 <!-- omit in toc -->
-#### Ruta
+**Ruta**
 
 ![](img/geo-osaka.png)
 <!-- omit in toc -->
-#### Preguntas
+**Preguntas**
 
 - **¿Qué porcentaje de saltos no responden los Time exceeded? ¿Cuál es el largo de la ruta en terminos de los saltos que si responden?**
 
