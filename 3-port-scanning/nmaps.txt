@@ -1,0 +1,1 @@
+sudo nmap -sU -sS -T4 -p 53 8.8.8.8
