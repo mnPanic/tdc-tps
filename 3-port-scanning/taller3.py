@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
 
+import csv
 import sys
 import scapy.all as scp
+from multiprocessing import Pool
+
+from typing import Tuple
 
 # 53: dns
 # 80: http
 #ports = [19, 20, 21, 22, 23, 53, 80]
-ports = range(1, 1026)
+ports = range(1, 1025)
 
 well_known = {
     21: "FTP",
@@ -15,16 +19,11 @@ well_known = {
     443: "HTTPS",
 }
 
-ip = sys.argv[1]
+# https://en.wikipedia.org/wiki/Transmission_Control_Protocol
+TCP_FLAG_SYN_ACK = 0x12 # 0001 (ack) 0010 (syn)
+TCP_FLAG_RST_ACK = 0x14 # 0001 (ack) 0100 (rst)
 
-# ack  syn
-# 0001 0010
-TCP_FLAG_SYN_ACK = 0x12
-
-# ack  rst
-# 0001 0100
-TCP_FLAG_RST_ACK = 0x14
-
+# https://en.wikipedia.org/wiki/Internet_Control_Message_Protocol
 ICMP_TYPE_DEST_UNREACHABLE = 3
 ICMP_CODE_PORT_UNREACHABLE = 3
 
@@ -66,7 +65,7 @@ def scan_udp(port: int) -> str:
     # Que paso?
     print(resp.summary())
 
-for port in ports:
+def scan_port(port: int) -> Tuple[int, dict]:
     # tcp
     result_tcp = scan_tcp(port)
     
@@ -78,7 +77,18 @@ for port in ports:
         output += f" ({well_known[port]})"
     
     if result_tcp != "filtrado" or result_udp != "abierto|filtrado":
-        output += f" TCP {result_tcp} / UDP {result_udp}"
+        output += f"/ TCP {result_tcp} / UDP {result_udp}"
         print(output)
+    
+    return port, {"tcp": result_tcp, "udp": result_udp}
+
+if __name__ == "__main__":
+    ip = sys.argv[1]
+    with open(f"out/results-{ip}.csv", "w+") as w:
+        print("port,tcp,udp", file=w)
+        with Pool(processes=16) as pool:
+            results = pool.map(scan_port, ports)
+            for (port, result) in results:
+                print(f"{port},{result['tcp']},{result['udp']} ", file=w)
 
    
