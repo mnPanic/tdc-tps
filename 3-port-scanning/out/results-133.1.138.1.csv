@@ -78,7 +78,7 @@ port,tcp,udp
 77,filtrado,abierto|filtrado
 78,filtrado,abierto|filtrado
 79,filtrado,abierto|filtrado
-80,abiertoSA,abierto|filtrado
+80,abierto SA,abierto|filtrado
 81,filtrado,abierto|filtrado
 82,filtrado,abierto|filtrado
 83,filtrado,abierto|filtrado
@@ -441,7 +441,7 @@ port,tcp,udp
 440,filtrado,abierto|filtrado
 441,filtrado,abierto|filtrado
 442,filtrado,abierto|filtrado
-443,abiertoSA,abierto|filtrado
+443,abierto SA,abierto|filtrado
 444,filtrado,abierto|filtrado
 445,filtrado,abierto|filtrado
 446,filtrado,abierto|filtrado
