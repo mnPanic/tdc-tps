@@ -5,7 +5,16 @@ import scapy.all as scp
 
 # 53: dns
 # 80: http
-ports = [19, 20, 21, 22, 23, 53, 80]
+#ports = [19, 20, 21, 22, 23, 53, 80]
+ports = range(1, 1026)
+
+well_known = {
+    21: "FTP",
+    53: "DNS",
+    80: "HTTP",
+    443: "HTTPS",
+}
+
 ip = sys.argv[1]
 
 # ack  syn
@@ -38,7 +47,7 @@ def scan_tcp(port: int) -> str:
 def scan_udp(port: int) -> str:
     # https://nmap.org/book/scan-methods-udp-scan.html
     p = scp.IP(dst=ip)/scp.UDP(sport=port, dport=port)
-    resp = scp.sr1(p, verbose=False, timeout=1.0)
+    resp = scp.sr1(p, verbose=False, timeout=0.3)
 
     if not resp:
         return "abierto|filtrado"
@@ -57,17 +66,19 @@ def scan_udp(port: int) -> str:
     # Que paso?
     print(resp.summary())
 
-for i in ports:
-    print(i, end='')
-
+for port in ports:
     # tcp
-    print("/ TCP ", end='')
-    result = scan_tcp(i)
-    print(result, end='')
+    result_tcp = scan_tcp(port)
     
     # udp
-    print(" / UDP ", end = '')
-    result = scan_udp(i)
-    print(result)
+    result_udp = scan_udp(port)
+
+    output = str(port)
+    if port in well_known:
+        output += f" ({well_known[port]})"
+    
+    if result_tcp != "filtrado" or result_udp != "abierto|filtrado":
+        output += f" TCP {result_tcp} / UDP {result_udp}"
+        print(output)
 
    
