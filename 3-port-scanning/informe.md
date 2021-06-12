@@ -31,9 +31,9 @@ La herramienta implementada envía paquetes TCP y UDP a la IP especificada utili
 
 Se ejecutó la herramienta sobre los sitios web de tres universidades, a las 19:00 del sábado 06/06/2021.
 
-- MIT[url]: `23.37.251.54`
-- Osaka University[url]: `133.1.138.1`
-- Moscow University[url]: `188.44.51.94`
+- [MIT](https://www.mit.edu/): `23.37.251.54`
+- [Osaka University](https://www.osaka-u.ac.jp/ja): `133.1.138.1`
+- [Moscow](https://www.google.com/search?q=russian+vodka&tbm=isch&ved=2ahUKEwiT0svG6JLxAhVos5UCHShjD6EQ2-cCegQIABAA&oq=russian+vodka&gs_lcp=CgNpbWcQAzICCAAyAggAMgIIADICCAAyBggAEAcQHjIGCAAQBxAeMgYIABAHEB4yBggAEAcQHjIGCAAQBxAeMgYIABAHEB46BAgAEBM6CAgAEAcQHhATULETWKcgYK4haANwAHgAgAFYiAGqBpIBAjExmAEAoAEBqgELZ3dzLXdpei1pbWfAAQE&sclient=img&ei=RwnFYNOSDejm1sQPqMa9iAo&bih=902&biw=1920#imgrc=OAqVtyW0tV48VM) [University](https://www.msu.ru/en/): `188.44.51.94`
 
 Se ejecutó también para otros sitios, pero los resultados no variaron significativamente.
 
@@ -42,7 +42,7 @@ Se ejecutó también para otros sitios, pero los resultados no variaron signific
 A continuación presentamos los resultados obtenidos para cada universidad, enumerando primero las respuestas TCP y luego las UDP.
 
 - **Osaka** (Elías)
- 
+
   | Protocolo | Respuesta         | Cantidad |
   | --------- | ----------------- | -------- |
   | tcp       | filtrado          | 1022     |
@@ -100,15 +100,11 @@ Viendo estos datos, podemos responder algunas de las incógnitas planteadas.
 
 - **¿Es posible darse cuenta si los hosts que se probaron están protegidos por un firewall?**
 
-  Creemos que para los `filtered` hay un firewall y los `closed` no.
-
-  **?? Verificar cuando veamos firewall**
+  Con la herramienta implementada no es posible determinar la presencia de un firewall. Esto es porque si un puerto está filtrado es imposible distinguir si no hubo respuesta del host o el paquete fue descartado (*drop*) por un firewall. Además, tampoco se puede en caso de recibir una respuesta, ya que ese puerto podría estar habilitado para ciertos protocolos por una regla. Por ejemplo, sería razonable que un servidor HTTP que aloja una página tenga habilitados solamente los puertos 80 (http) y 443 (https)
 
 - **¿Existen otros puertos bien conocidos que puedan estar abiertos en los hosts que se probaron?**
 
-  Si, hay [una lista](https://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers) de puertos bien conocidos.
-
-  **?? que quieren que digamos**
+  El programa itera todos los puertos [*well-known* (de 0 a 1024)](https://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers) y reporta el estado de todos ellos, pero podría suceder que un puerto esté abierto y que no sea detectado (como en el caso descrito arriba de UDP). Además existen los *registered ports* (de 1024 a 49151), que son de uso frecuente y en caso de estar abiertos nuestro programa no los detectaría.
 
 ## Conclusiones
 
