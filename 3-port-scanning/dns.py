@@ -7,12 +7,29 @@ from typing import List
 RECORD_TYPE_ADDRESS = "A"
 RECORD_TYPE_CNAME = "CNAME"
 
+ROOT_NAME_SERVERS = [
+    ("91.198.174.239", "ns2.wikimedia.org"),
+    # ("198.41.0.4", "a.root-servers.net"),
+    # ("199.9.14.201", "b.root-servers.net"),
+    # ("192.33.4.12", "c.root-servers.net"),
+    # ("199.7.91.13", "d.root-servers.net"),
+    # ("192.203.230.10", "e.root-servers.net"),
+    # ("192.5.5.241", "f.root-servers.net"),
+    # ("192.112.36.4", "g.root-servers.net"),
+    # ("198.97.190.53", "h.root-servers.net"),
+    # ("192.36.148.17", "i.root-servers.net"),
+    # ("192.58.128.30", "j.root-servers.net"),
+    # ("193.0.14.129", "k.root-servers.net"),
+    # ("199.7.83.42", "l.root-servers.net"),
+    # ("202.12.27.33", "m.root-servers.net"),
+]
+
 def print_dns_record(r: scp.DNSRR):
     # Para saber los campos que tiene r.fields_desc
     # https://stackoverflow.com/questions/41490875/scapy-get-dnsqr-dnsrr-field-values-in-symbolic-string-form
     print(f"{r.rrname.decode()} {r.get_field('type').i2repr(r, r.type)} {r.rdata}")  
 
-def find_answer(answers: dict, qname: str, record_type: str) -> str:
+def find_answer(answers: dict, qname: str, record_type: str, path: List[str]) -> str:
     """
     www.dc.uba.ar. CNAME b'www-1.dc.uba.ar.'
     www-1.dc.uba.ar. CNAME b'dc.uba.ar.'
@@ -24,13 +41,21 @@ def find_answer(answers: dict, qname: str, record_type: str) -> str:
         return r_data
     
     if r_type == RECORD_TYPE_CNAME:
-        return find_answer(answers, r_data.decode(), record_type)
-    
+        if r_data.decode() in answers:
+            return find_answer(answers, r_data.decode(), record_type, path)        
     return None
+
+def rqdns(qname: str, record_type: str):
+    for ip, name in ROOT_NAME_SERVERS:
+        ans, path = qdns(ip, name, qname, record_type, [])
+        if ans is not None:
+            return ans, path
+
+    return None, None
 
 def qdns(resolver_ip: str, resolver_name: str, qname: str, record_type: str, path: List[str]):
     print(f"\n\nQuerying DNS resolver {resolver_ip} ({resolver_name}) for qname {qname}")
-    dns = scp.DNS(rd=1,qd=scp.DNSQR(qname=qname))
+    dns = scp.DNS(rd=1, qd=scp.DNSQR(qname=qname))
     udp = scp.UDP(sport=scp.RandShort(), dport=53)
     ip = scp.IP(dst=resolver_ip)
 
@@ -40,7 +65,7 @@ def qdns(resolver_ip: str, resolver_name: str, qname: str, record_type: str, pat
         print("Answer")
         for i in range(answer[scp.DNS].ancount):
             print_dns_record(answer[scp.DNS].an[i])
-        
+
         answers = {}
         for i in range(answer[scp.DNS].ancount):
             r = answer[scp.DNS].an[i]
@@ -49,10 +74,10 @@ def qdns(resolver_ip: str, resolver_name: str, qname: str, record_type: str, pat
             r_data = r.rdata
 
             answers[r_name] = (r_type, r_data)
-            
+
         # Find answer
         if qname in answers:
-            ans = find_answer(answers, qname, record_type)
+            ans = find_answer(answers, qname, record_type, path)
             if ans is not None:
                 return ans, path
 
@@ -80,17 +105,19 @@ def qdns(resolver_ip: str, resolver_name: str, qname: str, record_type: str, pat
             r = answer[scp.DNS].ns[i]
             r_data = r.rdata.decode()
 
-            # TODO: Llamar a qdns
-            ip = ""
-            if r_data in additional_records:
-                ip = additional_records[r_data][RECORD_TYPE_ADDRESS]
-            else:
-                ip, _ = qdns("199.9.14.201", "b.root-servers.net", r_data, RECORD_TYPE_ADDRESS, [])
-                if ip is None:
-                    continue
+            if r_data not in additional_records:
+                continue
+
+            ip = additional_records[r_data][RECORD_TYPE_ADDRESS]
+            
+            # else:
+            #     ip, _ = rqdns(r_data, RECORD_TYPE_ADDRESS)
+            #     if ip is None:
+            #         continue
 
             # Detección de ciclos entre resolvers
             if ip in path:
+                #print(f"Already looked at {ip}")
                 continue
 
             ans, path = qdns(ip, r_data, qname, record_type, path + [ip])
@@ -102,6 +129,6 @@ def qdns(resolver_ip: str, resolver_name: str, qname: str, record_type: str, pat
 if __name__ == "__main__":
     qname = sys.argv[1]
     record_type = sys.argv[2]
-    print("\nAnswer:", qdns("199.9.14.201", "b.root-servers.net", qname+".", record_type, []))
+    print("\nAnswer:", rqdns(qname+".", record_type))
 
     
