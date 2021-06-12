@@ -1,0 +1,39 @@
+$ sudo python3 dns.py msu.ru MX
+
+Querying DNS resolver 198.41.0.4 (a.root-servers.net) for qname msu.ru.
+Answer
+Additional Records
+a.dns.ripn.net. A 193.232.128.6
+a.dns.ripn.net. AAAA 2001:678:17:0:193:232:128:6
+e.dns.ripn.net. A 193.232.142.17
+e.dns.ripn.net. AAAA 2001:678:15:0:193:232:142:17
+f.dns.ripn.net. A 193.232.156.17
+f.dns.ripn.net. AAAA 2001:678:14:0:193:232:156:17
+d.dns.ripn.net. A 194.190.124.17
+d.dns.ripn.net. AAAA 2001:678:18:0:194:190:124:17
+b.dns.ripn.net. A 194.85.252.62
+b.dns.ripn.net. AAAA 2001:678:16:0:194:85:252:62
+Name Servers
+ru. NS b'a.dns.ripn.net.'
+ru. NS b'e.dns.ripn.net.'
+ru. NS b'f.dns.ripn.net.'
+ru. NS b'd.dns.ripn.net.'
+ru. NS b'b.dns.ripn.net.'
+
+
+Querying DNS resolver 193.232.128.6 (a.dns.ripn.net.) for qname msu.ru.
+Answer
+Additional Records
+ns.msu.ru. A 93.180.0.1
+Name Servers
+msu.ru. NS b'ns.msu.ru.'
+msu.ru. NS b'ns.msu.net.'
+msu.ru. NS b'ns3.nic.fr.'
+
+
+Querying DNS resolver 93.180.0.1 (ns.msu.ru.) for qname msu.ru.
+Answer
+msu.ru. MX mx.msu.ru.
+msu.ru. MX nss.msu.ru.
+
+Answer: ('nss.msu.ru.', ['198.41.0.4', '193.232.128.6', '93.180.0.1'])

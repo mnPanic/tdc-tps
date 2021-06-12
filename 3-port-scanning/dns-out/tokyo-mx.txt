@@ -1,0 +1,55 @@
+$ sudo python3 dns.py u-tokyo.ac.jp 
+
+Querying DNS resolver 198.41.0.4 (a.root-servers.net) for qname u-tokyo.ac.jp.
+Answer
+Additional Records
+a.dns.jp. A 203.119.1.1
+a.dns.jp. AAAA 2001:dc4::1
+d.dns.jp. A 210.138.175.244
+d.dns.jp. AAAA 2001:240::53
+e.dns.jp. A 192.50.43.53
+e.dns.jp. AAAA 2001:200:c000::35
+f.dns.jp. A 150.100.6.8
+f.dns.jp. AAAA 2001:2f8:0:100::153
+h.dns.jp. A 65.22.40.25
+h.dns.jp. AAAA 2a01:8840:1ba::25
+g.dns.jp. A 203.119.40.1
+c.dns.jp. A 156.154.100.5
+c.dns.jp. AAAA 2001:502:ad09::5
+b.dns.jp. A 202.12.30.131
+b.dns.jp. AAAA 2001:dc2::1
+Name Servers
+jp. NS b'a.dns.jp.'
+jp. NS b'd.dns.jp.'
+jp. NS b'e.dns.jp.'
+jp. NS b'f.dns.jp.'
+jp. NS b'h.dns.jp.'
+jp. NS b'g.dns.jp.'
+jp. NS b'c.dns.jp.'
+jp. NS b'b.dns.jp.'
+
+
+Querying DNS resolver 203.119.1.1 (a.dns.jp.) for qname u-tokyo.ac.jp.
+Answer
+Additional Records
+dns1.nc.u-tokyo.ac.jp. A 133.11.0.1
+dns2.nc.u-tokyo.ac.jp. A 119.245.132.49
+dns3.nc.u-tokyo.ac.jp. A 157.82.0.1
+dns1.nc.u-tokyo.ac.jp. AAAA 2001:200:180::35:1
+dns2.nc.u-tokyo.ac.jp. AAAA 2001:2c0:ce07:f900::2
+dns3.nc.u-tokyo.ac.jp. AAAA 2001:200:180::35:3
+Name Servers
+u-tokyo.ac.jp. NS b'dns3.nc.u-tokyo.ac.jp.'
+u-tokyo.ac.jp. NS b'dns-x.sinet.ad.jp.'
+u-tokyo.ac.jp. NS b'dns1.nc.u-tokyo.ac.jp.'
+u-tokyo.ac.jp. NS b'dns2.nc.u-tokyo.ac.jp.'
+
+
+Querying DNS resolver 157.82.0.1 (dns3.nc.u-tokyo.ac.jp.) for qname u-tokyo.ac.jp.
+Answer
+u-tokyo.ac.jp. MX utmail2.nc.u-tokyo.ac.jp.
+u-tokyo.ac.jp. MX utmail3.nc.u-tokyo.ac.jp.
+u-tokyo.ac.jp. MX utmail4.nc.u-tokyo.ac.jp.
+u-tokyo.ac.jp. MX utmail5.nc.u-tokyo.ac.jp.
+
+Answer: ('utmail5.nc.u-tokyo.ac.jp.', ['198.41.0.4', '203.119.1.1', '157.82.0.1'])

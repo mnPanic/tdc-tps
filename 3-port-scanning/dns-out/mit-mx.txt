@@ -1,0 +1,118 @@
+
+
+Querying DNS resolver 198.41.0.4 (a.root-servers.net) for qname mit.edu.
+Answer
+Additional Records
+b.edu-servers.net. A 192.33.14.30
+b.edu-servers.net. AAAA 2001:503:231d::2:30
+f.edu-servers.net. A 192.35.51.30
+f.edu-servers.net. AAAA 2001:503:d414::30
+i.edu-servers.net. A 192.43.172.30
+i.edu-servers.net. AAAA 2001:503:39c1::30
+a.edu-servers.net. A 192.5.6.30
+a.edu-servers.net. AAAA 2001:503:a83e::2:30
+g.edu-servers.net. A 192.42.93.30
+g.edu-servers.net. AAAA 2001:503:eea3::30
+j.edu-servers.net. A 192.48.79.30
+j.edu-servers.net. AAAA 2001:502:7094::30
+Name Servers
+edu. NS b'b.edu-servers.net.'
+edu. NS b'f.edu-servers.net.'
+edu. NS b'i.edu-servers.net.'
+edu. NS b'a.edu-servers.net.'
+edu. NS b'g.edu-servers.net.'
+edu. NS b'j.edu-servers.net.'
+edu. NS b'k.edu-servers.net.'
+edu. NS b'm.edu-servers.net.'
+edu. NS b'l.edu-servers.net.'
+edu. NS b'h.edu-servers.net.'
+edu. NS b'c.edu-servers.net.'
+edu. NS b'e.edu-servers.net.'
+edu. NS b'd.edu-servers.net.'
+
+
+Querying DNS resolver 192.33.14.30 (b.edu-servers.net.) for qname mit.edu.
+Answer
+Additional Records
+Name Servers
+mit.edu. NS b'usw2.akam.net.'
+mit.edu. NS b'asia1.akam.net.'
+mit.edu. NS b'asia2.akam.net.'
+mit.edu. NS b'use2.akam.net.'
+mit.edu. NS b'ns1-37.akam.net.'
+mit.edu. NS b'ns1-173.akam.net.'
+mit.edu. NS b'eur5.akam.net.'
+mit.edu. NS b'use5.akam.net.'
+
+
+Querying DNS resolver 198.41.0.4 (a.root-servers.net) for qname usw2.akam.net.
+Answer
+Additional Records
+e.gtld-servers.net. A 192.12.94.30
+e.gtld-servers.net. AAAA 2001:502:1ca1::30
+f.gtld-servers.net. A 192.35.51.30
+f.gtld-servers.net. AAAA 2001:503:d414::30
+m.gtld-servers.net. A 192.55.83.30
+m.gtld-servers.net. AAAA 2001:501:b1f9::30
+i.gtld-servers.net. A 192.43.172.30
+i.gtld-servers.net. AAAA 2001:503:39c1::30
+j.gtld-servers.net. A 192.48.79.30
+j.gtld-servers.net. AAAA 2001:502:7094::30
+b.gtld-servers.net. A 192.33.14.30
+Name Servers
+net. NS b'e.gtld-servers.net.'
+net. NS b'f.gtld-servers.net.'
+net. NS b'm.gtld-servers.net.'
+net. NS b'i.gtld-servers.net.'
+net. NS b'j.gtld-servers.net.'
+net. NS b'b.gtld-servers.net.'
+net. NS b'a.gtld-servers.net.'
+net. NS b'c.gtld-servers.net.'
+net. NS b'k.gtld-servers.net.'
+net. NS b'h.gtld-servers.net.'
+net. NS b'l.gtld-servers.net.'
+net. NS b'g.gtld-servers.net.'
+net. NS b'd.gtld-servers.net.'
+
+
+Querying DNS resolver 192.12.94.30 (e.gtld-servers.net.) for qname usw2.akam.net.
+Answer
+Additional Records
+a9-67.akam.net. A 184.85.248.67
+a18-67.akam.net. A 95.101.36.67
+a5-67.akam.net. A 95.100.168.67
+a3-67.akam.net. A 96.7.49.67
+a28-67.akam.net. A 95.100.173.67
+a22-67.akam.net. A 23.211.61.67
+a7-67.akam.net. A 23.61.199.67
+a11-67.akam.net. A 84.53.139.67
+a1-67.akam.net. A 193.108.91.67
+a1-67.akam.net. AAAA 2600:1401:2::43
+a12-67.akam.net. A 184.26.160.67
+a13-67.akam.net. A 2.22.230.67
+Name Servers
+akam.net. NS b'a9-67.akam.net.'
+akam.net. NS b'a18-67.akam.net.'
+akam.net. NS b'a5-67.akam.net.'
+akam.net. NS b'a3-67.akam.net.'
+akam.net. NS b'a28-67.akam.net.'
+akam.net. NS b'a22-67.akam.net.'
+akam.net. NS b'a7-67.akam.net.'
+akam.net. NS b'a11-67.akam.net.'
+akam.net. NS b'a1-67.akam.net.'
+akam.net. NS b'a12-67.akam.net.'
+akam.net. NS b'a13-67.akam.net.'
+akam.net. NS b'a4-67.akam.net.'
+akam.net. NS b'a6-67.akam.net.'
+
+
+Querying DNS resolver 184.85.248.67 (a9-67.akam.net.) for qname usw2.akam.net.
+Answer
+usw2.akam.net. A 184.26.161.64
+
+
+Querying DNS resolver 184.26.161.64 (usw2.akam.net.) for qname mit.edu.
+Answer
+mit.edu. MX mit-edu.mail.protection.outlook.com.
+
+Answer: ('mit-edu.mail.protection.outlook.com.', ['198.41.0.4', '192.33.14.30', '184.26.161.64'])

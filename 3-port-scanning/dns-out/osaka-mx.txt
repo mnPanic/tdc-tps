@@ -1,0 +1,96 @@
+
+
+Querying DNS resolver 198.41.0.4 (a.root-servers.net) for qname osaka-u.ac.jp.
+Answer
+Additional Records
+a.dns.jp. A 203.119.1.1
+a.dns.jp. AAAA 2001:dc4::1
+d.dns.jp. A 210.138.175.244
+d.dns.jp. AAAA 2001:240::53
+e.dns.jp. A 192.50.43.53
+e.dns.jp. AAAA 2001:200:c000::35
+f.dns.jp. A 150.100.6.8
+f.dns.jp. AAAA 2001:2f8:0:100::153
+h.dns.jp. A 65.22.40.25
+h.dns.jp. AAAA 2a01:8840:1ba::25
+g.dns.jp. A 203.119.40.1
+c.dns.jp. A 156.154.100.5
+c.dns.jp. AAAA 2001:502:ad09::5
+b.dns.jp. A 202.12.30.131
+b.dns.jp. AAAA 2001:dc2::1
+Name Servers
+jp. NS b'a.dns.jp.'
+jp. NS b'd.dns.jp.'
+jp. NS b'e.dns.jp.'
+jp. NS b'f.dns.jp.'
+jp. NS b'h.dns.jp.'
+jp. NS b'g.dns.jp.'
+jp. NS b'c.dns.jp.'
+jp. NS b'b.dns.jp.'
+
+
+Querying DNS resolver 203.119.1.1 (a.dns.jp.) for qname osaka-u.ac.jp.
+Answer
+Additional Records
+a.osaka-u.ac.jp. A 133.1.192.3
+b.osaka-u.ac.jp. A 133.1.119.3
+Name Servers
+osaka-u.ac.jp. NS b'dns-x.sinet.ad.jp.'
+osaka-u.ac.jp. NS b'b.osaka-u.ac.jp.'
+osaka-u.ac.jp. NS b'a.osaka-u.ac.jp.'
+
+
+Querying DNS resolver 198.41.0.4 (a.root-servers.net) for qname dns-x.sinet.ad.jp.
+Answer
+Additional Records
+a.dns.jp. A 203.119.1.1
+a.dns.jp. AAAA 2001:dc4::1
+d.dns.jp. A 210.138.175.244
+d.dns.jp. AAAA 2001:240::53
+e.dns.jp. A 192.50.43.53
+e.dns.jp. AAAA 2001:200:c000::35
+f.dns.jp. A 150.100.6.8
+f.dns.jp. AAAA 2001:2f8:0:100::153
+h.dns.jp. A 65.22.40.25
+h.dns.jp. AAAA 2a01:8840:1ba::25
+g.dns.jp. A 203.119.40.1
+c.dns.jp. A 156.154.100.5
+c.dns.jp. AAAA 2001:502:ad09::5
+b.dns.jp. A 202.12.30.131
+b.dns.jp. AAAA 2001:dc2::1
+Name Servers
+jp. NS b'a.dns.jp.'
+jp. NS b'd.dns.jp.'
+jp. NS b'e.dns.jp.'
+jp. NS b'f.dns.jp.'
+jp. NS b'h.dns.jp.'
+jp. NS b'g.dns.jp.'
+jp. NS b'c.dns.jp.'
+jp. NS b'b.dns.jp.'
+
+
+Querying DNS resolver 203.119.1.1 (a.dns.jp.) for qname dns-x.sinet.ad.jp.
+Answer
+Additional Records
+dns.sinet.ad.jp. A 150.100.3.6
+jpnac.sinet.ad.jp. A 150.100.250.7
+dns.sinet.ad.jp. AAAA 2001:2f8:0:1::53
+jpnac.sinet.ad.jp. AAAA 2001:2f8:0:fa::5353
+Name Servers
+sinet.ad.jp. NS b'dns.sinet.ad.jp.'
+sinet.ad.jp. NS b'jpnac.sinet.ad.jp.'
+
+
+Querying DNS resolver 150.100.3.6 (dns.sinet.ad.jp.) for qname dns-x.sinet.ad.jp.
+Answer
+dns-x.sinet.ad.jp. A 150.100.18.10
+dns-x.sinet.ad.jp. A 150.100.18.2
+dns-x.sinet.ad.jp. A 150.100.18.6
+
+
+Querying DNS resolver 150.100.18.6 (dns-x.sinet.ad.jp.) for qname osaka-u.ac.jp.
+Answer
+Additional Records
+Name Servers
+osaka-u.ac.jp. SOA -
+Found SOA, no MX record.

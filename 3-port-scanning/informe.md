@@ -34,6 +34,7 @@ Se ejecutó la herramienta sobre los sitios web de tres universidades, a las 19:
 - [MIT](https://www.mit.edu/): `23.37.251.54`
 - [Osaka University](https://www.osaka-u.ac.jp/ja): `133.1.138.1`
 - [Moscow](https://www.google.com/search?q=russian+vodka&tbm=isch&ved=2ahUKEwiT0svG6JLxAhVos5UCHShjD6EQ2-cCegQIABAA&oq=russian+vodka&gs_lcp=CgNpbWcQAzICCAAyAggAMgIIADICCAAyBggAEAcQHjIGCAAQBxAeMgYIABAHEB4yBggAEAcQHjIGCAAQBxAeMgYIABAHEB46BAgAEBM6CAgAEAcQHhATULETWKcgYK4haANwAHgAgAFYiAGqBpIBAjExmAEAoAEBqgELZ3dzLXdpei1pbWfAAQE&sclient=img&ei=RwnFYNOSDejm1sQPqMa9iAo&bih=902&biw=1920#imgrc=OAqVtyW0tV48VM) [University](https://www.msu.ru/en/): `188.44.51.94`
+- [Tokyo Univesity](u-tokyo.ac.jp): Solo DNS.
 
 Se ejecutó también para otros sitios, pero los resultados no variaron significativamente.
 

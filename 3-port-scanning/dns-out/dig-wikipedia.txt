@@ -1,0 +1,43 @@
+$ dig +recurse +trace @192.203.230.10 wikipedia.org MX
+; <<>> DiG 9.11.3-1ubuntu1.15-Ubuntu <<>> +recurse +trace @192.203.230.10 wikipedia.org MX
+; (1 server found)
+;; global options: +cmd
+.			518400	IN	NS	m.root-servers.net.
+.			518400	IN	NS	b.root-servers.net.
+.			518400	IN	NS	c.root-servers.net.
+.			518400	IN	NS	d.root-servers.net.
+.			518400	IN	NS	e.root-servers.net.
+.			518400	IN	NS	f.root-servers.net.
+.			518400	IN	NS	g.root-servers.net.
+.			518400	IN	NS	h.root-servers.net.
+.			518400	IN	NS	a.root-servers.net.
+.			518400	IN	NS	i.root-servers.net.
+.			518400	IN	NS	j.root-servers.net.
+.			518400	IN	NS	k.root-servers.net.
+.			518400	IN	NS	l.root-servers.net.
+.			518400	IN	RRSIG	NS 8 0 518400 20210625170000 20210612160000 14631 . jHlnSXcXdkc/asBeq5rpnauB8IKoXrWF+Np/0tqZyTRP20XWucxCz4im TmR+m/7Ab/qMByCrCFXqF6ntQ+icytmxjZaz8eS2CgAH9apKnw689Oy9 cPU/Jy4JatPTCUP2Tl8Kg9iWXQil01MdvIVpIYio2beRPbi2YSZTAuEF gPM/cFygUuAt7QqL29O6E5Tmu1k4PUBcsEwZ5MThXHBbU0mAsUW1ZUMU WPLDnrC6We7pJklLSFE1NYhSkCLmH+/uHHKAuLNy1Dby+NMZj+Ug0yJW q+g9i2POz7d0F810y28XCMIiYPJ5Wd6dm95EyzSq+5nhzsYi3RVAUYZf CYiWgg==
+;; Received 1097 bytes from 192.203.230.10#53(192.203.230.10) in 9 ms
+
+org.			172800	IN	NS	a0.org.afilias-nst.info.
+org.			172800	IN	NS	a2.org.afilias-nst.info.
+org.			172800	IN	NS	b0.org.afilias-nst.org.
+org.			172800	IN	NS	b2.org.afilias-nst.org.
+org.			172800	IN	NS	c0.org.afilias-nst.info.
+org.			172800	IN	NS	d0.org.afilias-nst.org.
+org.			86400	IN	DS	26974 8 2 4FEDE294C53F438A158C41D39489CD78A86BEB0D8A0AEAFF14745C0D 16E1DE32
+org.			86400	IN	RRSIG	DS 8 1 86400 20210625170000 20210612160000 14631 . Th+FWarpv41Cqpsri9jAIkUODDRVpAVfVuXh4/RshV7U2xjQiAJPJg0q hyu2j0hv+m2GmGqwEg5twrOCbSKmIo083gTDLNbmSxO9Tj1CIUnn3C37 wI5A8meD/MSk35N0RFBwF2sWuH9uTg2lc1aEZYMkygBZqDM5QHQo5jQg Uv8KsekyPUA1qsZ4rw9nxk5ikdTSjtwwNNNWaGpXWORIRk7zrqe4ZIuf Pev368uKrDuWgRbjib+txNCOgewO5ZXoQ4d5RoyY7nydf71egUJaayNG uKCia7GvVfAwubbBaxsw6l1W1ARCNZSGjEUREy5UsfMPs7gj2Ki7rYDK 2VlV7A==
+;; Received 779 bytes from 199.7.83.42#53(l.root-servers.net) in 22 ms
+
+wikipedia.org.		86400	IN	NS	ns2.wikimedia.org.
+wikipedia.org.		86400	IN	NS	ns1.wikimedia.org.
+wikipedia.org.		86400	IN	NS	ns0.wikimedia.org.
+1i870vj5h429vj9pci7ar6e9gki74tr7.org. 86400 IN NSEC3 1 1 10 332539EE7F95C32A 1I87R64GAJU4O91MHKBU7I9EKBS7K8UT  NS SOA RRSIG DNSKEY NSEC3PARAM
+1i870vj5h429vj9pci7ar6e9gki74tr7.org. 86400 IN RRSIG NSEC3 8 2 86400 20210703223120 20210612213120 20130 org. KzkUGr2IJbC7GbBR1ev7vDe32Uf6WL8tmpQ097rxe0dIhAJ/k5OS5Bnv L75tsZOXhQH3ABcZb1Ioy+4eUwb+JdWbdx/fcY4/+Q+D1fJ4HHFYTCnR 0x001hEK7+13dhHsGBLe1tAluECWcphho3YefBWgcbOP6RZ0GutanFs9 RTQ=
+pn6rd3lejbu5jp52f97bmeta07q1vo30.org. 86400 IN NSEC3 1 1 10 332539EE7F95C32A PN748PA2MU4PR54LL93UTN92B2HDO978  NS DS RRSIG
+pn6rd3lejbu5jp52f97bmeta07q1vo30.org. 86400 IN RRSIG NSEC3 8 2 86400 20210630152307 20210609142307 20130 org. RvdXh8kWhHJqUEvmyF/QzB52tTtVb5QC4Y7PqnnPoOKZgEOcCL1v2xl8 kVy7wlcFkUCNkEJhZJPWBRfZWEQus54cMBOrBaBdKOF9wQe7fFL7Hn32 hPw9w+Xk9Sn/olQOJ+JFx4YSJ55r9vkOVRdIAFbg7gxG+PHAiqN/5b2W RLU=
+;; Received 655 bytes from 199.19.53.1#53(c0.org.afilias-nst.info) in 183 ms
+
+wikipedia.org.		3600	IN	MX	10 mx1001.wikimedia.org.
+wikipedia.org.		3600	IN	MX	50 mx2001.wikimedia.org.
+;; Received 118 bytes from 91.198.174.239#53(ns2.wikimedia.org) in 242 ms
+
