@@ -93,4 +93,4 @@ Answer
 Additional Records
 Name Servers
 osaka-u.ac.jp. SOA -
-Found SOA, no MX record.
+Found SOA, no MX record. Path: ['198.41.0.4', '203.119.1.1', '150.100.18.10']

@@ -122,7 +122,7 @@ def qdns(resolver_ip: str, resolver_name: str, qname: str, record_type: str, pat
             r = answer[scp.DNS].ns[i]
             r_type = r.get_field('type').i2repr(r, r.type)
             if r_type == "SOA":
-                print(f"Found SOA, no {record_type} record.")
+                print(f"Found SOA, no {record_type} record. Path: {path}")
                 quit()
 
             r_data = get_data(r).decode()

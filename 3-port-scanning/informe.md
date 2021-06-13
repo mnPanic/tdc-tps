@@ -1,12 +1,16 @@
+<!-- omit in toc -->
 # Taller 3 - Port Scanning y DNS
 
-IPs:
+- [Introducción](#introducción)
+- [Métodos y condiciones de los experimentos](#métodos-y-condiciones-de-los-experimentos)
+- [Resultados de los experimentos](#resultados-de-los-experimentos)
+- [DNS](#dns)
+  - [Resultados](#resultados)
+- [Conclusiones](#conclusiones)
 
 ## Introducción
 
-En este trabajo se desarrolla una herramienta para detectar al estado de los puertos en un sistema operativo, implementando un subconjunto de las funcionalidades de [nmap](https://nmap.org/).
-
-En concreto, la herramienta efectuará un *port scan* sobre una cierta IP enviando paquetes TCP y UDP a cada puerto y analizando las respuestas para determinar su estado.
+En este trabajo se desarrolla una herramienta para detectar al estado de los puertos en un sistema operativo, implementando un subconjunto de las funcionalidades de [nmap](https://nmap.org/). En concreto, la herramienta efectuará un *port scan* sobre una cierta IP enviando paquetes TCP y UDP a cada puerto y analizando las respuestas para determinar su estado.
 
 En particular, en este trabajo solo se evalúan los *well-known ports* (1 a 1024) las páginas web de 3 universidades diferentes: Osaka, MIT y Moscow. A partir de los resultados obtenidos se pretende descubrir qué servicios están disponibles en cada host y si están protegidos por un *firewall*.
 
@@ -34,7 +38,6 @@ Se ejecutó la herramienta sobre los sitios web de tres universidades, a las 19:
 - [MIT](https://www.mit.edu/): `23.37.251.54`
 - [Osaka University](https://www.osaka-u.ac.jp/ja): `133.1.138.1`
 - [Moscow](https://www.google.com/search?q=russian+vodka&tbm=isch&ved=2ahUKEwiT0svG6JLxAhVos5UCHShjD6EQ2-cCegQIABAA&oq=russian+vodka&gs_lcp=CgNpbWcQAzICCAAyAggAMgIIADICCAAyBggAEAcQHjIGCAAQBxAeMgYIABAHEB4yBggAEAcQHjIGCAAQBxAeMgYIABAHEB46BAgAEBM6CAgAEAcQHhATULETWKcgYK4haANwAHgAgAFYiAGqBpIBAjExmAEAoAEBqgELZ3dzLXdpei1pbWfAAQE&sclient=img&ei=RwnFYNOSDejm1sQPqMa9iAo&bih=902&biw=1920#imgrc=OAqVtyW0tV48VM) [University](https://www.msu.ru/en/): `188.44.51.94`
-- [Tokyo Univesity](u-tokyo.ac.jp): Solo DNS.
 
 Se ejecutó también para otros sitios, pero los resultados no variaron significativamente.
 
@@ -107,15 +110,84 @@ Viendo estos datos, podemos responder algunas de las incógnitas planteadas.
 
   El programa itera todos los puertos [*well-known* (de 0 a 1024)](https://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers) y reporta el estado de todos ellos, pero podría suceder que un puerto esté abierto y que no sea detectado (como en el caso descrito arriba de UDP). Además existen los *registered ports* (de 1024 a 49151), que son de uso frecuente y en caso de estar abiertos nuestro programa no los detectaría.
 
+## DNS
+
+En este trabajo implementamos, utilizando `scapy`, una versión simplificada del comando `dig` para resolución de nombres. Para ello, se extendió el código provisto por la cátedra para que a través de consultas sucesivas iterativas se obtenga el registro MX de un dominio dado.
+
+Se ejecutó para las URLs de las mismas universidades mencionadas en la sección de [Metodología](#métodos-y-condiciones-de-los-experimentos).
+
+### Resultados
+
+A continuación presentamos los resultados para cada universidad.
+
+- **MIT**: `mit.edu` (Luciano)
+
+  ```text
+  198.41.0.4 (a.root-servers.net)
+    -> 192.33.14.30 (b.edu-servers.net.)
+    -> 184.26.161.64 (usw2.akam.net.)
+  
+  Answer
+  mit.edu. MX mit-edu.mail.protection.outlook.com.
+  ```
+
+  Que tiene las IPs `104.47.58.138` y `104.47.57.138`
+
+- **Osaka University**: `osaka-u.ac.jp` (Elías)
+
+  ```text
+  198.41.0.4 (a.root-servers.net)
+    -> 203.119.1.1 (a.dns.jp.)
+    -> 150.100.18.6 (dns-x.sinet.ad.jp.)
+
+  Name Servers
+  osaka-u.ac.jp. SOA -
+
+  Found SOA, no MX record.
+  ```
+
+- **Moscow University**: `msu.ru` (Manuel)
+
+  ```text
+  198.41.0.4 (a.root-servers.net)
+    -> 193.232.128.6 (a.dns.ripn.net.)
+    -> 93.180.0.1 (ns.msu.ru.)
+
+  Answer
+  msu.ru. MX mx.msu.ru.
+  msu.ru. MX nss.msu.ru.
+  ```
+
+  Ambas con la IP `93.180.0.1`
+
+Con ellos podemos resolver algunas cuestiones:
+
+- **¿Cuántos niveles de servidores DNS se recorrieron en las sucesivas consultas hasta obtener la información solicitada?**
+
+  Para todos los casos se recorrieron 3 niveles de servidores DNS.
+
+- **¿Todos los servidores DNS Autoritativos que aparecen en las sucesivas respuestas responden a las consultas realizadas?**
+
+  Si, ya que cada servidor nos indica mediante los Name Servers por qué servidores continuar consultando.
+
+- **¿Cuántos nombres de servidores de mail encontraron? ¿Tienen nombres en el mismo dominio que la universidad?**
+
+  Encontramos nombres de servidores de mail para Moscow (2 nombres de servidor) y MIT (1 nombre), todos con en el mismo dominio que la universidad.
+
+- **¿Cuántas direcciones IP distintas hay? ¿Estas direcciones IP corresponden a dispositivos que están prendidos? (Hint: probar con ping si responden)**
+
+  En el caso de Moscow se encontró que ambos mail servers tenían la misma IP, que se correspondían a un dispositivo prendido (que respondía ping). En cambio, el mail server de MIT tenía dos IPs, y ambas correspondían a dispositivos apagados.
+
+- **¿Coinciden las IPs de los servidores de correo con las IPs de los servidores Web?**
+
+  La de Moscow (www.msu.ru, `188.44.51.94`) no coincide y la de MIT (www.mit.edu, `104.87.47.78`) tampoco.
+
 ## Conclusiones
 
-- hablar de **firewall**
-- los puertos que estan abiertos son los usuales y esperados para una pagina web
-- no suelen responder probablemente por razones de seguridad o porque no son necesarias.
-  - estaria piola saber por qué tendrías mas
-- trabajo futuro
-  - queda como trabajo futuro implementar payloads especificos de UDP para cada puerto, como se cuenta en la sección resultados.
-  - pegarle a otras urls y descubrir más puertos, y que casos de uso reales hay
-    - mail SMTP, POP, IMAP
-    - dns server DNS y TLS DNS
-    - ...
+Para todas las universidades analizadas los puertos que se encontraron abiertos fueron los usuales y esperados para una página web (80 y 443). Uno de los objetivos de este trabajo fue determinar la presencia de un firewall, sin embargo a fin de cuentas frente a la falta de respuesta de un puerto no podemos afirmar si fue por el descarte de un firewall o que no había ninguna aplicación escuchando en ese puerto. Creemos que sería razonable tanto que un servidor web no tenga aplicaciones corriendo en otros puertos, como que sí las tenga pero que estén bloqueadas por un firewall, ya que no es necesario acceder desde internet.
+
+Queda como trabajo a futuro implementar payloads específicos de UDP para cada *well-known port*, tal como se cuenta en la sección de [resultados](#resultados-de-los-experimentos). Además, sería interesante realizar el mismo experimento para puertos más allá del 1024, por ejemplo los *registered ports* y probar con URLs que no sean sitios web, para encontrar otra variedad de puertos abiertos, por ejemplo un DNS o mail server.
+
+Si bien se logró imitar los resultados de `dig` para todos los hosts probados, funcionaba muchísimo más lento. Queda también como trabajo a futuro paralelizar las consultas, y estudiar si el programa utiliza alguna heurística para navegar el grafo de resolvedores de forma más eficiente.
+
+Finalmente, concluimos que si bien Scapy es una herramienta poderosa que nos permite enviar y recibir paquetes de distinto tipo, tiene una gran falta de documentación y una de las dificultades más grandes del trabajo fue lograr entender cómo hacer las cosas.
