@@ -10,13 +10,13 @@
 
 ## Introducción
 
-En este trabajo se desarrolla una herramienta para detectar al estado de los puertos en un sistema operativo, implementando un subconjunto de las funcionalidades de [nmap](https://nmap.org/). En concreto, la herramienta efectuará un *port scan* sobre una cierta IP enviando paquetes TCP y UDP a cada puerto y analizando las respuestas para determinar su estado.
+En este trabajo se desarrolla una herramienta para detectar el estado de los puertos en un sistema operativo, implementando un subconjunto de las funcionalidades de [nmap](https://nmap.org/). En concreto, la herramienta efectuará un *port scan* sobre una cierta IP enviando paquetes TCP y UDP a cada puerto y analizando las respuestas para determinar su estado.
 
-En particular, en este trabajo solo se evalúan los *well-known ports* (1 a 1024) las páginas web de 3 universidades diferentes: Osaka, MIT y Moscow. A partir de los resultados obtenidos se pretende descubrir qué servicios están disponibles en cada host y si están protegidos por un *firewall*.
+En particular, se evalúan los *well-known ports* (1 a 1024) de las páginas web de 3 universidades diferentes: Osaka, MIT y Moscow. A partir de los resultados obtenidos se pretende descubrir qué servicios están disponibles en cada host y si están protegidos por un *firewall*.
 
 ## Métodos y condiciones de los experimentos
 
-La herramienta implementada envía paquetes TCP y UDP a la IP especificada utilizando la biblioteca `scapy`[citation needed]. Analiza las respuestas y las clasifica en tres grandes categorías: `filtrado`, `abierto`, `cerrado`.
+La herramienta implementada envía paquetes TCP y UDP a la IP especificada utilizando la biblioteca [`scapy`](https://scapy.net/). Analiza las respuestas y las clasifica en tres grandes categorías: `filtrado`, `abierto` y `cerrado`.
 
 - Para TCP, se inicia una conexión mediante un paquete TCP con flag SYN sobre IP al socket elegido y se analiza la respuesta:
   - Si no hubo respuesta, se devuelve `filtrado`.
@@ -29,8 +29,8 @@ La herramienta implementada envía paquetes TCP y UDP a la IP especificada utili
 - Para UDP, se envía un paquete UDP vacío sobre IP al socket elegido y se analiza la respuesta siguiendo la guía de interpretación especificada por [`nmap`](https://nmap.org/book/scan-methods-udp-scan.html)
   - Si no hubo respuesta, se devuelve `abierto|filtrado`
   - Si hubo respuesta UDP, `abierto`.
-  - Si hubo respuesta ICMP de tipo 3 (Destination Unreachable)
-    - Si tiene code 3 (Port Unreachable) se devuelve `cerrado`
+  - Si hubo respuesta ICMP de tipo 3 (*Destination Unreachable*)
+    - Si tiene code 3 (*Port Unreachable*) se devuelve `cerrado`
     - Sino, se devuelve `filtrado (icmp t: 3 c: <code>)`
 
 Se ejecutó la herramienta sobre los sitios web de tres universidades, a las 19:00 del sábado 06/06/2021.
@@ -91,20 +91,22 @@ Viendo estos datos, podemos responder algunas de las incógnitas planteadas.
 
 - **¿Cuántos puertos abiertos aparecen? ¿A que servicios/protocolos (nivel de aplicación) corresponden?**
 
-  En todas aparecen los mismos dos puertos abiertos: 80/tcp (HTTP) y 443/tcp (HTTPS), y además en Moscú aparece el 22/tcp (SSH/scp/sftp).
+  En todas aparecen los mismos dos puertos abiertos: `80/tcp` (HTTP) y `443/tcp` (HTTPS), y además en Moscú aparece el `22/tcp` (SSH/scp/sftp).
 
 - **¿Cuántos puertos filtrados tenían los sitios web que se probaron?**
 
   En Osaka y MIT para TCP había 1022 puertos filtrados (todos menos el 80 y 443)
   y todos los de UDP fueron abierto\|filtrado.
 
-  Para Moscú para tcp hubieron 962 filtrados por falta de respuesta y 59 por ICMP *Destination Unreachable (type 3) / Host administratively prohibited (code 10)*. Para UDP, 989 udp abierto\|filtrado por falta de respuesta y 35 por ICMP 3/10.
+  En el caso de Moscú, para tcp hubieron 962 filtrados por falta de respuesta y 59 por ICMP *Destination Unreachable (type 3) / Host administratively prohibited (code 10)*. Para UDP, 989  abierto\|filtrado por falta de respuesta y 35 por ICMP 3/10.
 
-  En la documentación de nmap se menciona el uso de payloads específicos para intentar escanear los puertos UDP, ya que las aplicaciones que reciben paquetes vacíos suelen descartarlos. Suponemos que esta es la razón por la cual no obtuvimos ninguna respuesta UDP para estas universidades. Comprobamos que nuestra herramienta no detecta algunos puertos UDP que nmap sí, como por ejemplo el 53 (DNS) para la IP `8.8.8.8` (DNS de Google).
+  En la documentación de `nmap` se menciona el uso de payloads específicos para intentar escanear los puertos UDP, ya que las aplicaciones que reciben paquetes vacíos suelen descartarlos. Suponemos que esta es la razón por la cual no obtuvimos ninguna respuesta UDP para estas universidades. Comprobamos que nuestra herramienta no detecta algunos puertos UDP que `nmap` sí, como por ejemplo el 53 (DNS) para la IP `8.8.8.8` (DNS de Google).
 
 - **¿Es posible darse cuenta si los hosts que se probaron están protegidos por un firewall?**
 
-  Con la herramienta implementada no es posible determinar la presencia de un firewall. Esto es porque si un puerto está filtrado es imposible distinguir si no hubo respuesta del host o el paquete fue descartado (*drop*) por un firewall. Además, tampoco se puede en caso de recibir una respuesta, ya que ese puerto podría estar habilitado para ciertos protocolos por una regla. Por ejemplo, sería razonable que un servidor HTTP que aloja una página tenga habilitados solamente los puertos 80 (http) y 443 (https)
+  Con la herramienta implementada no es posible determinar la presencia de un firewall para todos los casos. Esto es porque si un puerto está filtrado es imposible distinguir si no hubo respuesta del host o el paquete fue descartado (*drop*) por un firewall. Además, tampoco se puede en caso de recibir una respuesta, ya que ese puerto podría estar habilitado para ciertos protocolos por una regla. Por ejemplo, sería razonable que un servidor HTTP que aloja una página tenga habilitados solamente los puertos 80 (http) y 443 (https).
+
+  En cambio, en los casos en los que se recibe ICMP 3/10 (*Host administratively prohibited*) se puede afirmar la presencia de un firewall.
 
 - **¿Existen otros puertos bien conocidos que puedan estar abiertos en los hosts que se probaron?**
 
@@ -112,9 +114,7 @@ Viendo estos datos, podemos responder algunas de las incógnitas planteadas.
 
 ## DNS
 
-En este trabajo implementamos, utilizando `scapy`, una versión simplificada del comando `dig` para resolución de nombres. Para ello, se extendió el código provisto por la cátedra para que a través de consultas sucesivas iterativas se obtenga el registro MX de un dominio dado.
-
-Se ejecutó para las URLs de las mismas universidades mencionadas en la sección de [Metodología](#métodos-y-condiciones-de-los-experimentos).
+En este trabajo implementamos, utilizando `scapy`, una versión simplificada del comando `dig` para resolución de nombres. Para ello, se extendió el código provisto por la cátedra para que a través de consultas sucesivas iterativas se obtenga el registro MX de un dominio dado. Este se ejecutó para las URLs de las mismas universidades mencionadas en la sección de [Metodología](#métodos-y-condiciones-de-los-experimentos).
 
 ### Resultados
 
@@ -168,15 +168,15 @@ Con ellos podemos resolver algunas cuestiones:
 
 - **¿Todos los servidores DNS Autoritativos que aparecen en las sucesivas respuestas responden a las consultas realizadas?**
 
-  Si, ya que cada servidor nos indica mediante los Name Servers por qué servidores continuar consultando.
+  Si, ya que cada servidor nos indica mediante los Name Servers por qué servidores que contienen la información solicitada continuar buscando.
 
 - **¿Cuántos nombres de servidores de mail encontraron? ¿Tienen nombres en el mismo dominio que la universidad?**
 
   Encontramos nombres de servidores de mail para Moscow (2 nombres de servidor) y MIT (1 nombre), todos con en el mismo dominio que la universidad.
 
-- **¿Cuántas direcciones IP distintas hay? ¿Estas direcciones IP corresponden a dispositivos que están prendidos? (Hint: probar con ping si responden)**
+- **¿Cuántas direcciones IP distintas hay? ¿Estas direcciones IP corresponden a dispositivos que están prendidos? (Hint: probar con *ping* si responden)**
 
-  En el caso de Moscow se encontró que ambos mail servers tenían la misma IP, que se correspondían a un dispositivo prendido (que respondía ping). En cambio, el mail server de MIT tenía dos IPs, y ambas correspondían a dispositivos apagados.
+  En el caso de Moscow se encontró que ambos mail servers tenían la misma IP, que se correspondían a un dispositivo prendido (que respondía `ping`). En cambio, el mail server de MIT tenía dos IPs, y ambas correspondían a dispositivos apagados.
 
 - **¿Coinciden las IPs de los servidores de correo con las IPs de los servidores Web?**
 
@@ -184,9 +184,9 @@ Con ellos podemos resolver algunas cuestiones:
 
 ## Conclusiones
 
-Para todas las universidades analizadas los puertos que se encontraron abiertos fueron los usuales y esperados para una página web (80 y 443). Uno de los objetivos de este trabajo fue determinar la presencia de un firewall, sin embargo a fin de cuentas frente a la falta de respuesta de un puerto no podemos afirmar si fue por el descarte de un firewall o que no había ninguna aplicación escuchando en ese puerto. Creemos que sería razonable tanto que un servidor web no tenga aplicaciones corriendo en otros puertos, como que sí las tenga pero que estén bloqueadas por un firewall, ya que no es necesario acceder desde internet.
+Para todas las universidades analizadas los puertos que se encontraron abiertos fueron los usuales y esperados para una página web (80 y 443). Uno de los objetivos de este trabajo fue determinar la presencia de un firewall, sin embargo a fin de cuentas frente a la falta de respuesta de un puerto no podemos afirmar si fue por el descarte de un firewall o que no había ninguna aplicación escuchando en ese puerto. Creemos que sería razonable tanto que un servidor web no tenga aplicaciones corriendo en otros puertos, como que sí las tenga pero que estén bloqueadas por un firewall, ya que no es necesario acceder desde internet. En el caso de Moscú, se pudo determinar la presencia de uno.
 
-Queda como trabajo a futuro implementar payloads específicos de UDP para cada *well-known port*, tal como se cuenta en la sección de [resultados](#resultados-de-los-experimentos). Además, sería interesante realizar el mismo experimento para puertos más allá del 1024, por ejemplo los *registered ports* y probar con URLs que no sean sitios web, para encontrar otra variedad de puertos abiertos, por ejemplo un DNS o mail server.
+Queda como trabajo a futuro implementar payloads específicos de UDP para cada *well-known port*, tal como se cuenta en la sección de [resultados](#resultados-de-los-experimentos). Además, sería interesante realizar los mismos experimentos para puertos más allá del 1024, por ejemplo los *registered ports* y probar con URLs que no sean sitios web, para encontrar otra variedad de puertos abiertos, por ejemplo un DNS o mail server.
 
 Si bien se logró imitar los resultados de `dig` para todos los hosts probados, funcionaba muchísimo más lento. Queda también como trabajo a futuro paralelizar las consultas, y estudiar si el programa utiliza alguna heurística para navegar el grafo de resolvedores de forma más eficiente.
 
