@@ -38,4 +38,4 @@ scapy.
 
 ## Informe
 
-El informe está en [`informe.md`](informe.md)
+El informe está en [`informe.md`](informe.md), y el pdf en [`informe.pdf`](informe.pdf)
