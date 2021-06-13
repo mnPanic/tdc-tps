@@ -1,12 +1,24 @@
 <!-- omit in toc -->
 # Taller 3 - Port Scanning y DNS
 
+## Contenidos
+
+- [Contenidos](#contenidos)
+- [Integrantes](#integrantes)
 - [Introducción](#introducción)
 - [Métodos y condiciones de los experimentos](#métodos-y-condiciones-de-los-experimentos)
 - [Resultados de los experimentos](#resultados-de-los-experimentos)
 - [DNS](#dns)
   - [Resultados](#resultados)
 - [Conclusiones](#conclusiones)
+
+## Integrantes
+
+| LU     | Nombre            | Mail                      |
+| ------ | ----------------- | ------------------------- |
+| 72/18  | Manuel Panichelli | panicmanu@gmail.com       |
+| 76/16  | Luciano Strika    | lucianostrika44@gmail.com |
+| 692/12 | Elías Cerdeira    | eliascerdeira@gmail.com   |
 
 ## Introducción
 

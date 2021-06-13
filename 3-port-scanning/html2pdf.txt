@@ -1,0 +1,9 @@
+https://stackoverflow.com/questions/42005819/how-to-insert-a-page-break-in-html-so-wkhtmltopdf-parses-it
+
+wkhtmltopdf \
+    --print-media-type \
+    --margin-bottom 20mm \
+    --margin-top 20mm \
+    --margin-left 20mm \
+    --margin-right 20mm \
+    informe.html informe.pdf

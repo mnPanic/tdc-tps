@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Taller 3 - Port Scanning y DNS</title>
+<style>
+/* Para que wkhtmltopdf respete los page breaks */
+@media print {
+  .new-page {
+    page-break-before: always;
+  }
+}
+</style>
+        
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item { list-style-type: none; } .task-list-item-checkbox { margin-left: -20px; vertical-align: middle; }
+</style>
+        
+        
+        
+    </head>
+    <body class="vscode-body vscode-light">
+        <!-- omit in toc -->
+<h1 id="taller-3---port-scanning-y-dns">Taller 3 - Port Scanning y DNS</h1>
+<h2 id="contenidos">Contenidos</h2>
+<ul>
+<li><a href="#contenidos">Contenidos</a></li>
+<li><a href="#integrantes">Integrantes</a></li>
+<li><a href="#introducci%C3%B3n">Introducción</a></li>
+<li><a href="#m%C3%A9todos-y-condiciones-de-los-experimentos">Métodos y condiciones de los experimentos</a></li>
+<li><a href="#resultados-de-los-experimentos">Resultados de los experimentos</a></li>
+<li><a href="#dns">DNS</a>
+<ul>
+<li><a href="#resultados">Resultados</a></li>
+</ul>
+</li>
+<li><a href="#conclusiones">Conclusiones</a></li>
+</ul>
+<h2 id="integrantes">Integrantes</h2>
+<table>
+<thead>
+<tr>
+<th>LU</th>
+<th>Nombre</th>
+<th>Mail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>72/18</td>
+<td>Manuel Panichelli</td>
+<td><a href="mailto:panicmanu@gmail.com">panicmanu@gmail.com</a></td>
+</tr>
+<tr>
+<td>76/16</td>
+<td>Luciano Strika</td>
+<td><a href="mailto:lucianostrika44@gmail.com">lucianostrika44@gmail.com</a></td>
+</tr>
+<tr>
+<td>692/12</td>
+<td>Elías Cerdeira</td>
+<td><a href="mailto:eliascerdeira@gmail.com">eliascerdeira@gmail.com</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="introducción">Introducción</h2>
+<p>En este trabajo se desarrolla una herramienta para detectar el estado de los puertos en un sistema operativo, implementando un subconjunto de las funcionalidades de <a href="https://nmap.org/">nmap</a>. En concreto, la herramienta efectuará un <em>port scan</em> sobre una cierta IP enviando paquetes TCP y UDP a cada puerto y analizando las respuestas para determinar su estado.</p>
+<p>En particular, se evalúan los <em>well-known ports</em> (1 a 1024) de las páginas web de 3 universidades diferentes: Osaka, MIT y Moscow. A partir de los resultados obtenidos se pretende descubrir qué servicios están disponibles en cada host y si están protegidos por un <em>firewall</em>.</p>
+<h2 id="métodos-y-condiciones-de-los-experimentos">Métodos y condiciones de los experimentos</h2>
+<p>La herramienta implementada envía paquetes TCP y UDP a la IP especificada utilizando la biblioteca <a href="https://scapy.net/"><code>scapy</code></a>. Analiza las respuestas y las clasifica en tres grandes categorías: <code>filtrado</code>, <code>abierto</code> y <code>cerrado</code>.</p>
+<ul>
+<li>
+<p>Para TCP, se inicia una conexión mediante un paquete TCP con flag SYN sobre IP al socket elegido y se analiza la respuesta:</p>
+<ul>
+<li>Si no hubo respuesta, se devuelve <code>filtrado</code>.</li>
+<li>Si hubo respuesta del tipo TCP,
+<ul>
+<li>Si los flags de la respuesta fueron SYNC ACK (SA), se devuelve <code>abierto</code>.</li>
+<li>Si los flags fueron RESET ACK (RA), se devuelve <code>cerrado</code>.</li>
+</ul>
+</li>
+<li>Si hubo respuesta del tipo ICMP
+<ul>
+<li>Se retorna <code>filtrado (icmp t: &lt;type&gt; c: &lt;code&gt;)</code>.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>Para UDP, se envía un paquete UDP vacío sobre IP al socket elegido y se analiza la respuesta siguiendo la guía de interpretación especificada por <a href="https://nmap.org/book/scan-methods-udp-scan.html"><code>nmap</code></a></p>
+<ul>
+<li>Si no hubo respuesta, se devuelve <code>abierto|filtrado</code></li>
+<li>Si hubo respuesta UDP, <code>abierto</code>.</li>
+<li>Si hubo respuesta ICMP de tipo 3 (<em>Destination Unreachable</em>)
+<ul>
+<li>Si tiene code 3 (<em>Port Unreachable</em>) se devuelve <code>cerrado</code></li>
+<li>Sino, se devuelve <code>filtrado (icmp t: 3 c: &lt;code&gt;)</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Se ejecutó la herramienta sobre los sitios web de tres universidades, a las 19:00 del sábado 06/06/2021.</p>
+<ul>
+<li><a href="https://www.mit.edu/">MIT</a>: <code>23.37.251.54</code></li>
+<li><a href="https://www.osaka-u.ac.jp/ja">Osaka University</a>: <code>133.1.138.1</code></li>
+<li><a href="https://www.google.com/search?q=russian+vodka&amp;tbm=isch&amp;ved=2ahUKEwiT0svG6JLxAhVos5UCHShjD6EQ2-cCegQIABAA&amp;oq=russian+vodka&amp;gs_lcp=CgNpbWcQAzICCAAyAggAMgIIADICCAAyBggAEAcQHjIGCAAQBxAeMgYIABAHEB4yBggAEAcQHjIGCAAQBxAeMgYIABAHEB46BAgAEBM6CAgAEAcQHhATULETWKcgYK4haANwAHgAgAFYiAGqBpIBAjExmAEAoAEBqgELZ3dzLXdpei1pbWfAAQE&amp;sclient=img&amp;ei=RwnFYNOSDejm1sQPqMa9iAo&amp;bih=902&amp;biw=1920#imgrc=OAqVtyW0tV48VM">Moscow</a> <a href="https://www.msu.ru/en/">University</a>: <code>188.44.51.94</code></li>
+</ul>
+<p>Se ejecutó también para otros sitios, pero los resultados no variaron significativamente.</p>
+<h2 id="resultados-de-los-experimentos">Resultados de los experimentos</h2>
+<p>A continuación presentamos los resultados obtenidos para cada universidad, enumerando primero las respuestas TCP y luego las UDP.</p>
+<ul>
+<li>
+<p><strong>Osaka</strong> (Elías)</p>
+<table>
+<thead>
+<tr>
+<th>Protocolo</th>
+<th>Respuesta</th>
+<th>Cantidad</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tcp</td>
+<td>filtrado</td>
+<td>1022</td>
+</tr>
+<tr>
+<td>tcp</td>
+<td>abierto (SA)</td>
+<td>2</td>
+</tr>
+<tr>
+<td>udp</td>
+<td>abierto|filtrado</td>
+<td>1024</td>
+</tr>
+</tbody>
+</table>
+<p>Puertos abiertos:</p>
+<ul>
+<li><code>80/tcp</code> abierto (SA)</li>
+<li><code>443/tcp</code> abierto (SA)</li>
+</ul>
+</li>
+<li>
+<p><strong>Moscu</strong> (Manuel)</p>
+<table>
+<thead>
+<tr>
+<th>Protocolo</th>
+<th>Respuesta</th>
+<th>Cantidad</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tcp</td>
+<td>filtrado</td>
+<td>962</td>
+</tr>
+<tr>
+<td>tcp</td>
+<td>filtrado (icmp t:3 c:10)</td>
+<td>59</td>
+</tr>
+<tr>
+<td>tcp</td>
+<td>abierto (SA)</td>
+<td>3</td>
+</tr>
+<tr>
+<td>udp</td>
+<td>abierto|filtrado</td>
+<td>989</td>
+</tr>
+<tr>
+<td>udp</td>
+<td>filtrado (icmp t:3 c:10)</td>
+<td>35</td>
+</tr>
+</tbody>
+</table>
+<p>Puertos abiertos:</p>
+<ul>
+<li><code>22/tcp</code> (SSH) abierto (SA)</li>
+<li><code>80/tcp</code> (HTTP) abierto (SA)</li>
+<li><code>443/tcp</code> (HTTPS) abierto (SA)</li>
+</ul>
+</li>
+<li>
+<p><strong>MIT</strong> (Luciano)</p>
+<table>
+<thead>
+<tr>
+<th>Protocolo</th>
+<th>Respuesta</th>
+<th>Cantidad</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tcp</td>
+<td>filtrado</td>
+<td>1022</td>
+</tr>
+<tr>
+<td>tcp</td>
+<td>abierto (SA)</td>
+<td>2</td>
+</tr>
+<tr>
+<td>udp</td>
+<td>abierto|filtrado</td>
+<td>1024</td>
+</tr>
+</tbody>
+</table>
+<p>Puertos abiertos:</p>
+<ul>
+<li><code>80/tcp</code> abierto (SA)</li>
+<li><code>443/tcp</code> abierto (SA)</li>
+</ul>
+</li>
+</ul>
+<p>Viendo estos datos, podemos responder algunas de las incógnitas planteadas.</p>
+<ul>
+<li>
+<p><strong>¿Cuántos puertos abiertos aparecen? ¿A que servicios/protocolos (nivel de aplicación) corresponden?</strong></p>
+<p>En todas aparecen los mismos dos puertos abiertos: <code>80/tcp</code> (HTTP) y <code>443/tcp</code> (HTTPS), y además en Moscú aparece el <code>22/tcp</code> (SSH/scp/sftp).</p>
+</li>
+<li>
+<p><strong>¿Cuántos puertos filtrados tenían los sitios web que se probaron?</strong></p>
+<p>En Osaka y MIT para TCP había 1022 puertos filtrados (todos menos el 80 y 443)
+y todos los de UDP fueron abierto|filtrado.</p>
+<p>En el caso de Moscú, para tcp hubieron 962 filtrados por falta de respuesta y 59 por ICMP <em>Destination Unreachable (type 3) / Host administratively prohibited (code 10)</em>. Para UDP, 989  abierto|filtrado por falta de respuesta y 35 por ICMP 3/10.</p>
+<p>En la documentación de <code>nmap</code> se menciona el uso de payloads específicos para intentar escanear los puertos UDP, ya que las aplicaciones que reciben paquetes vacíos suelen descartarlos. Suponemos que esta es la razón por la cual no obtuvimos ninguna respuesta UDP para estas universidades. Comprobamos que nuestra herramienta no detecta algunos puertos UDP que <code>nmap</code> sí, como por ejemplo el 53 (DNS) para la IP <code>8.8.8.8</code> (DNS de Google).</p>
+</li>
+<li>
+<p><strong>¿Es posible darse cuenta si los hosts que se probaron están protegidos por un firewall?</strong></p>
+<p>Con la herramienta implementada no es posible determinar la presencia de un firewall para todos los casos. Esto es porque si un puerto está filtrado es imposible distinguir si no hubo respuesta del host o el paquete fue descartado (<em>drop</em>) por un firewall. Además, tampoco se puede en caso de recibir una respuesta, ya que ese puerto podría estar habilitado para ciertos protocolos por una regla. Por ejemplo, sería razonable que un servidor HTTP que aloja una página tenga habilitados solamente los puertos 80 (http) y 443 (https).</p>
+<p>En cambio, en los casos en los que se recibe ICMP 3/10 (<em>Host administratively prohibited</em>) se puede afirmar la presencia de un firewall.</p>
+</li>
+<li>
+<p><strong>¿Existen otros puertos bien conocidos que puedan estar abiertos en los hosts que se probaron?</strong></p>
+<p>El programa itera todos los puertos <a href="https://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers"><em>well-known</em> (de 0 a 1024)</a> y reporta el estado de todos ellos, pero podría suceder que un puerto esté abierto y que no sea detectado (como en el caso descrito arriba de UDP). Además existen los <em>registered ports</em> (de 1024 a 49151), que son de uso frecuente y en caso de estar abiertos nuestro programa no los detectaría.</p>
+</li>
+</ul>
+<h2 id="dns" class="new-page">DNS</h2>
+<p>En este trabajo implementamos, utilizando <code>scapy</code>, una versión simplificada del comando <code>dig</code> para resolución de nombres. Para ello, se extendió el código provisto por la cátedra para que a través de consultas sucesivas iterativas se obtenga el registro MX de un dominio dado. Este se ejecutó para las URLs de las mismas universidades mencionadas en la sección de <a href="#m%C3%A9todos-y-condiciones-de-los-experimentos">Metodología</a>.</p>
+<h3 id="resultados">Resultados</h3>
+<p>A continuación presentamos los resultados para cada universidad.</p>
+<ul>
+<li>
+<p><strong>MIT</strong>: <code>mit.edu</code> (Luciano)</p>
+<pre><code class="language-text"><div>198.41.0.4 (a.root-servers.net)
+  -&gt; 192.33.14.30 (b.edu-servers.net.)
+  -&gt; 184.26.161.64 (usw2.akam.net.)
+
+Answer
+mit.edu. MX mit-edu.mail.protection.outlook.com.
+</div></code></pre>
+<p>Que tiene las IPs <code>104.47.58.138</code> y <code>104.47.57.138</code></p>
+</li>
+<li>
+<p><strong>Osaka University</strong>: <code>osaka-u.ac.jp</code> (Elías)</p>
+<pre><code class="language-text"><div>198.41.0.4 (a.root-servers.net)
+  -&gt; 203.119.1.1 (a.dns.jp.)
+  -&gt; 150.100.18.6 (dns-x.sinet.ad.jp.)
+
+Name Servers
+osaka-u.ac.jp. SOA -
+
+Found SOA, no MX record.
+</div></code></pre>
+</li>
+<li>
+<p><strong>Moscow University</strong>: <code>msu.ru</code> (Manuel)</p>
+<pre><code class="language-text"><div>198.41.0.4 (a.root-servers.net)
+  -&gt; 193.232.128.6 (a.dns.ripn.net.)
+  -&gt; 93.180.0.1 (ns.msu.ru.)
+
+Answer
+msu.ru. MX mx.msu.ru.
+msu.ru. MX nss.msu.ru.
+</div></code></pre>
+<p>Ambas con la IP <code>93.180.0.1</code></p>
+</li>
+</ul>
+<p>Con ellos podemos resolver algunas cuestiones:</p>
+<ul>
+<li>
+<p><strong>¿Cuántos niveles de servidores DNS se recorrieron en las sucesivas consultas hasta obtener la información solicitada?</strong></p>
+<p>Para todos los casos se recorrieron 3 niveles de servidores DNS.</p>
+</li>
+<li>
+<p><strong>¿Todos los servidores DNS Autoritativos que aparecen en las sucesivas respuestas responden a las consultas realizadas?</strong></p>
+<p>Si, ya que cada servidor nos indica mediante los Name Servers por qué servidores que contienen la información solicitada continuar buscando.</p>
+</li>
+<li>
+<p><strong>¿Cuántos nombres de servidores de mail encontraron? ¿Tienen nombres en el mismo dominio que la universidad?</strong></p>
+<p>Encontramos nombres de servidores de mail para Moscow (2 nombres de servidor) y MIT (1 nombre), todos con en el mismo dominio que la universidad.</p>
+</li>
+<li>
+<p><strong>¿Cuántas direcciones IP distintas hay? ¿Estas direcciones IP corresponden a dispositivos que están prendidos? (Hint: probar con <em>ping</em> si responden)</strong></p>
+<p>En el caso de Moscow se encontró que ambos mail servers tenían la misma IP, que se correspondían a un dispositivo prendido (que respondía <code>ping</code>). En cambio, el mail server de MIT tenía dos IPs, y ambas correspondían a dispositivos apagados.</p>
+</li>
+<li>
+<p><strong>¿Coinciden las IPs de los servidores de correo con las IPs de los servidores Web?</strong></p>
+<p>La de Moscow (<a href="http://www.msu.ru">www.msu.ru</a>, <code>188.44.51.94</code>) no coincide y la de MIT (<a href="http://www.mit.edu">www.mit.edu</a>, <code>104.87.47.78</code>) tampoco.</p>
+</li>
+</ul>
+<h2 id="conclusiones">Conclusiones</h2>
+<p>Para todas las universidades analizadas los puertos que se encontraron abiertos fueron los usuales y esperados para una página web (80 y 443). Uno de los objetivos de este trabajo fue determinar la presencia de un firewall, sin embargo a fin de cuentas frente a la falta de respuesta de un puerto no podemos afirmar si fue por el descarte de un firewall o que no había ninguna aplicación escuchando en ese puerto. Creemos que sería razonable tanto que un servidor web no tenga aplicaciones corriendo en otros puertos, como que sí las tenga pero que estén bloqueadas por un firewall, ya que no es necesario acceder desde internet. En el caso de Moscú, se pudo determinar la presencia de uno.</p>
+<p>Queda como trabajo a futuro implementar payloads específicos de UDP para cada <em>well-known port</em>, tal como se cuenta en la sección de <a href="#resultados-de-los-experimentos">resultados</a>. Además, sería interesante realizar los mismos experimentos para puertos más allá del 1024, por ejemplo los <em>registered ports</em> y probar con URLs que no sean sitios web, para encontrar otra variedad de puertos abiertos, por ejemplo un DNS o mail server.</p>
+<p>Si bien se logró imitar los resultados de <code>dig</code> para todos los hosts probados, funcionaba muchísimo más lento. Queda también como trabajo a futuro paralelizar las consultas, y estudiar si el programa utiliza alguna heurística para navegar el grafo de resolvedores de forma más eficiente.</p>
+<p>Finalmente, concluimos que si bien Scapy es una herramienta poderosa que nos permite enviar y recibir paquetes de distinto tipo, tiene una gran falta de documentación y una de las dificultades más grandes del trabajo fue lograr entender cómo hacer las cosas.</p>
+
+    </body>
+    </html>
